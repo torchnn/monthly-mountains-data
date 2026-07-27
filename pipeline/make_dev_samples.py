@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -33,11 +34,18 @@ def _iso(stamp: datetime) -> str:
 
 def build_forecast() -> dict:
     """collect_weather.py --dry-run 을 그대로 호출한다 — 표본과 실제 코드가 갈라지지 않게."""
-    subprocess.run(
+    # 수집기는 산 카탈로그를 입력으로 받는다. 여기선 앱 번들 시드를 그대로 쓴다.
+    work = DATA_REPO / "data" / "v1"
+    work.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(RESOURCES / "mountains.json", work / "mountains.json")
+
+    result = subprocess.run(
         [sys.executable, "pipeline/collect_weather.py", "--dry-run", "--only", SAMPLE_ID],
-        cwd=DATA_REPO, check=True, capture_output=True,
+        cwd=DATA_REPO, capture_output=True, text=True,
     )
-    payload = json.loads((DATA_REPO / "data" / "v1" / "forecast" / f"{SAMPLE_ID}.json").read_text("utf-8"))
+    if result.returncode != 0:
+        raise SystemExit(f"collect_weather.py 실패:\n{result.stderr}")
+    payload = json.loads((work / "forecast" / f"{SAMPLE_ID}.json").read_text("utf-8"))
 
     # 안전 배너와 혼잡도 보정 경로도 화면에서 확인할 수 있게 표본에 넣는다.
     now = datetime.now(KST)
@@ -81,7 +89,7 @@ def main() -> None:
     for name, payload in targets.items():
         path = RESOURCES / name
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print(f"wrote {path.relative_to(ROOT)}")
+        print(f"wrote {path.relative_to(APP_REPO)}  → {APP_REPO.name}")
 
     print("\nDEBUG 빌드에서 북한산 상세 화면을 열면 날씨·맛집·안전배너 섹션이 표본으로 렌더된다.")
     print("여기서 화면이 비면 파이프라인 스키마와 Swift 디코더가 어긋난 것이다.")

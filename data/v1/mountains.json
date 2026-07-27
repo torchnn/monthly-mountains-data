@@ -1,0 +1,1487 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-27T12:02:32Z",
+  "seed": true,
+  "mountains": [
+    {
+      "id": "bukhansan",
+      "name": "북한산",
+      "tagline": "서울을 굽어보는 화강암 능선",
+      "region": "서울",
+      "sigungu": "서울 강북구",
+      "lat": 37.6589,
+      "lon": 126.9779,
+      "elevation": 836,
+      "peaks": [
+        {
+          "name": "백운대",
+          "elevation": 836
+        },
+        {
+          "name": "인수봉",
+          "elevation": 810
+        },
+        {
+          "name": "만경대",
+          "elevation": 799
+        }
+      ],
+      "parkType": "national",
+      "parkName": "북한산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "우이동~백운대",
+          "distanceKm": 4.7,
+          "durationMin": 180,
+          "difficulty": 4
+        },
+        {
+          "name": "북한산성~대남문",
+          "distanceKm": 5.2,
+          "durationMin": 165,
+          "difficulty": 3
+        }
+      ],
+      "species": [
+        {
+          "name": "오색딱따구리",
+          "kind": "bird",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "산개나리",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "우이분소",
+          "lat": 37.6626,
+          "lon": 127.0106,
+          "transit": "우이신설선 북한산우이역 도보 10분",
+          "parking": "우이동공영주차장"
+        },
+        {
+          "name": "북한산성탐방지원센터",
+          "lat": 37.665,
+          "lon": 126.935,
+          "transit": "3호선 구파발역 버스 15분",
+          "parking": "북한산성 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 60,
+        "ny": 129
+      },
+      "airRegion": "서울",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "dobongsan",
+      "name": "도봉산",
+      "tagline": "바위꾼들의 놀이터, 자운봉 연봉",
+      "region": "서울",
+      "sigungu": "서울 도봉구",
+      "lat": 37.6979,
+      "lon": 127.0147,
+      "elevation": 740,
+      "peaks": [
+        {
+          "name": "자운봉",
+          "elevation": 740
+        },
+        {
+          "name": "만장봉",
+          "elevation": 718
+        },
+        {
+          "name": "선인봉",
+          "elevation": 708
+        }
+      ],
+      "parkType": "national",
+      "parkName": "북한산국립공원",
+      "isTop100": true,
+      "difficulty": 4,
+      "courses": [
+        {
+          "name": "도봉탐방지원센터~자운봉",
+          "distanceKm": 4.0,
+          "durationMin": 165,
+          "difficulty": 4
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "도봉탐방지원센터",
+          "lat": 37.689,
+          "lon": 127.0155,
+          "transit": "1·7호선 도봉산역 도보 10분",
+          "parking": "도봉산 공영주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 60,
+        "ny": 130
+      },
+      "airRegion": "서울",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "gwanaksan",
+      "name": "관악산",
+      "tagline": "서울 남쪽을 지키는 바위 능선",
+      "region": "서울",
+      "sigungu": "서울 관악구",
+      "lat": 37.4452,
+      "lon": 126.964,
+      "elevation": 632,
+      "peaks": [
+        {
+          "name": "연주대",
+          "elevation": 632
+        }
+      ],
+      "parkType": "none",
+      "parkName": null,
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "서울대입구~연주대",
+          "distanceKm": 4.2,
+          "durationMin": 150,
+          "difficulty": 3
+        },
+        {
+          "name": "과천향교~연주대",
+          "distanceKm": 3.4,
+          "durationMin": 135,
+          "difficulty": 3
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "관악산공원 입구",
+          "lat": 37.4645,
+          "lon": 126.953,
+          "transit": "2호선 서울대입구역 버스 10분",
+          "parking": "관악산공원 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 60,
+        "ny": 124
+      },
+      "airRegion": "서울",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "cheonggyesan",
+      "name": "청계산",
+      "tagline": "완만한 흙길, 수도권 입문 코스",
+      "region": "경기",
+      "sigungu": "경기 성남시",
+      "lat": 37.4133,
+      "lon": 127.0503,
+      "elevation": 618,
+      "peaks": [
+        {
+          "name": "망경대",
+          "elevation": 618
+        },
+        {
+          "name": "매봉",
+          "elevation": 583
+        }
+      ],
+      "parkType": "none",
+      "parkName": null,
+      "isTop100": false,
+      "difficulty": 2,
+      "courses": [
+        {
+          "name": "원터골~매봉",
+          "distanceKm": 3.2,
+          "durationMin": 100,
+          "difficulty": 2
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "원터골 입구",
+          "lat": 37.4478,
+          "lon": 127.0553,
+          "transit": "신분당선 청계산입구역 도보 5분",
+          "parking": "원터골 공영주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 61,
+        "ny": 123
+      },
+      "airRegion": "경기",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "suraksan",
+      "name": "수락산",
+      "tagline": "기암과 계곡이 어우러진 서울 북동쪽 산",
+      "region": "서울",
+      "sigungu": "서울 노원구",
+      "lat": 37.6959,
+      "lon": 127.0839,
+      "elevation": 638,
+      "peaks": [
+        {
+          "name": "주봉",
+          "elevation": 638
+        }
+      ],
+      "parkType": "none",
+      "parkName": null,
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "수락산역~주봉",
+          "distanceKm": 3.8,
+          "durationMin": 140,
+          "difficulty": 3
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "수락산역 입구",
+          "lat": 37.6786,
+          "lon": 127.0555,
+          "transit": "7호선 수락산역 도보 10분",
+          "parking": null
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 62,
+        "ny": 130
+      },
+      "airRegion": "서울",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "inwangsan",
+      "name": "인왕산",
+      "tagline": "성곽길 따라 걷는 서울 도심 조망",
+      "region": "서울",
+      "sigungu": "서울 종로구",
+      "lat": 37.5804,
+      "lon": 126.9583,
+      "elevation": 338,
+      "peaks": [
+        {
+          "name": "정상",
+          "elevation": 338
+        }
+      ],
+      "parkType": "none",
+      "parkName": null,
+      "isTop100": false,
+      "difficulty": 1,
+      "courses": [
+        {
+          "name": "사직공원~정상",
+          "distanceKm": 2.0,
+          "durationMin": 60,
+          "difficulty": 1
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "사직공원 입구",
+          "lat": 37.576,
+          "lon": 126.966,
+          "transit": "3호선 경복궁역 도보 15분",
+          "parking": null
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 59,
+        "ny": 127
+      },
+      "airRegion": "서울",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "seoraksan",
+      "name": "설악산",
+      "tagline": "한국 산악미의 정점, 대청봉의 능선",
+      "region": "강원",
+      "sigungu": "강원 속초시",
+      "lat": 38.1194,
+      "lon": 128.4655,
+      "elevation": 1708,
+      "peaks": [
+        {
+          "name": "대청봉",
+          "elevation": 1708
+        },
+        {
+          "name": "중청봉",
+          "elevation": 1676
+        },
+        {
+          "name": "소청봉",
+          "elevation": 1550
+        }
+      ],
+      "parkType": "national",
+      "parkName": "설악산국립공원",
+      "isTop100": true,
+      "difficulty": 5,
+      "courses": [
+        {
+          "name": "오색~대청봉",
+          "distanceKm": 5.0,
+          "durationMin": 240,
+          "difficulty": 5
+        },
+        {
+          "name": "한계령~대청봉",
+          "distanceKm": 8.0,
+          "durationMin": 330,
+          "difficulty": 5
+        },
+        {
+          "name": "소공원~비선대",
+          "distanceKm": 3.0,
+          "durationMin": 70,
+          "difficulty": 2
+        }
+      ],
+      "species": [
+        {
+          "name": "산양",
+          "kind": "mammal",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "눈잣나무",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "설악동소공원",
+          "lat": 38.169,
+          "lon": 128.496,
+          "transit": "속초시외버스터미널 버스 30분",
+          "parking": "소공원 주차장"
+        },
+        {
+          "name": "오색탐방지원센터",
+          "lat": 38.07,
+          "lon": 128.43,
+          "transit": "양양 시내버스",
+          "parking": "오색 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 85,
+        "ny": 139
+      },
+      "airRegion": "강원",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "jirisan",
+      "name": "지리산",
+      "tagline": "어머니 같은 능선, 천왕봉 일출",
+      "region": "경남",
+      "sigungu": "경남 산청군",
+      "lat": 35.3369,
+      "lon": 127.7306,
+      "elevation": 1915,
+      "peaks": [
+        {
+          "name": "천왕봉",
+          "elevation": 1915
+        },
+        {
+          "name": "반야봉",
+          "elevation": 1732
+        },
+        {
+          "name": "노고단",
+          "elevation": 1507
+        }
+      ],
+      "parkType": "national",
+      "parkName": "지리산국립공원",
+      "isTop100": true,
+      "difficulty": 5,
+      "courses": [
+        {
+          "name": "중산리~천왕봉",
+          "distanceKm": 5.4,
+          "durationMin": 270,
+          "difficulty": 5
+        },
+        {
+          "name": "성삼재~노고단",
+          "distanceKm": 2.6,
+          "durationMin": 60,
+          "difficulty": 1
+        }
+      ],
+      "species": [
+        {
+          "name": "반달가슴곰",
+          "kind": "mammal",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "히어리",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "중산리탐방지원센터",
+          "lat": 35.33,
+          "lon": 127.75,
+          "transit": "진주 시외버스 1시간",
+          "parking": "중산리 주차장"
+        },
+        {
+          "name": "성삼재휴게소",
+          "lat": 35.279,
+          "lon": 127.503,
+          "transit": "구례 시내버스",
+          "parking": "성삼재 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 74,
+        "ny": 78
+      },
+      "airRegion": "경남",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "hallasan",
+      "name": "한라산",
+      "tagline": "남한 최고봉, 백록담을 품은 방패 화산",
+      "region": "제주",
+      "sigungu": "제주 서귀포시",
+      "lat": 33.3617,
+      "lon": 126.5292,
+      "elevation": 1947,
+      "peaks": [
+        {
+          "name": "백록담",
+          "elevation": 1947
+        },
+        {
+          "name": "윗세오름",
+          "elevation": 1700
+        }
+      ],
+      "parkType": "national",
+      "parkName": "한라산국립공원",
+      "isTop100": true,
+      "difficulty": 4,
+      "courses": [
+        {
+          "name": "성판악~백록담",
+          "distanceKm": 9.6,
+          "durationMin": 300,
+          "difficulty": 4
+        },
+        {
+          "name": "영실~윗세오름",
+          "distanceKm": 5.8,
+          "durationMin": 150,
+          "difficulty": 3
+        }
+      ],
+      "species": [
+        {
+          "name": "구상나무",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "성판악탐방지원센터",
+          "lat": 33.385,
+          "lon": 126.619,
+          "transit": "제주시 버스 281번",
+          "parking": "성판악 주차장(사전예약)"
+        },
+        {
+          "name": "영실탐방지원센터",
+          "lat": 33.352,
+          "lon": 126.493,
+          "transit": "서귀포 버스 240번",
+          "parking": "영실 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 53,
+        "ny": 35
+      },
+      "airRegion": "제주",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "deogyusan",
+      "name": "덕유산",
+      "tagline": "겨울 상고대와 향적봉 설경",
+      "region": "전북",
+      "sigungu": "전북 무주군",
+      "lat": 35.8603,
+      "lon": 127.7469,
+      "elevation": 1614,
+      "peaks": [
+        {
+          "name": "향적봉",
+          "elevation": 1614
+        },
+        {
+          "name": "중봉",
+          "elevation": 1594
+        }
+      ],
+      "parkType": "national",
+      "parkName": "덕유산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "곤돌라~향적봉",
+          "distanceKm": 2.0,
+          "durationMin": 60,
+          "difficulty": 2
+        },
+        {
+          "name": "삼공리~향적봉",
+          "distanceKm": 8.5,
+          "durationMin": 270,
+          "difficulty": 4
+        }
+      ],
+      "species": [
+        {
+          "name": "붉은배새매",
+          "kind": "bird",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "구상나무",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "무주덕유산리조트",
+          "lat": 35.888,
+          "lon": 127.737,
+          "transit": "무주 시내버스",
+          "parking": "리조트 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 74,
+        "ny": 90
+      },
+      "airRegion": "전북",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "sobaeksan",
+      "name": "소백산",
+      "tagline": "철쭉 능선과 칼바람의 비로봉",
+      "region": "충북",
+      "sigungu": "충북 단양군",
+      "lat": 36.9569,
+      "lon": 128.4856,
+      "elevation": 1439,
+      "peaks": [
+        {
+          "name": "비로봉",
+          "elevation": 1439
+        },
+        {
+          "name": "연화봉",
+          "elevation": 1383
+        },
+        {
+          "name": "국망봉",
+          "elevation": 1421
+        }
+      ],
+      "parkType": "national",
+      "parkName": "소백산국립공원",
+      "isTop100": true,
+      "difficulty": 4,
+      "courses": [
+        {
+          "name": "삼가리~비로봉",
+          "distanceKm": 5.7,
+          "durationMin": 210,
+          "difficulty": 4
+        },
+        {
+          "name": "희방사~연화봉",
+          "distanceKm": 3.2,
+          "durationMin": 150,
+          "difficulty": 3
+        }
+      ],
+      "species": [
+        {
+          "name": "여우",
+          "kind": "mammal",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "모데미풀",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "삼가탐방지원센터",
+          "lat": 36.976,
+          "lon": 128.46,
+          "transit": "단양 시내버스",
+          "parking": "삼가 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 86,
+        "ny": 114
+      },
+      "airRegion": "충북",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "odaesan",
+      "name": "오대산",
+      "tagline": "전나무숲길과 완만한 비로봉",
+      "region": "강원",
+      "sigungu": "강원 평창군",
+      "lat": 37.7947,
+      "lon": 128.5433,
+      "elevation": 1563,
+      "peaks": [
+        {
+          "name": "비로봉",
+          "elevation": 1563
+        },
+        {
+          "name": "상왕봉",
+          "elevation": 1491
+        }
+      ],
+      "parkType": "national",
+      "parkName": "오대산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "상원사~비로봉",
+          "distanceKm": 3.5,
+          "durationMin": 120,
+          "difficulty": 3
+        },
+        {
+          "name": "월정사 전나무숲길",
+          "distanceKm": 1.9,
+          "durationMin": 40,
+          "difficulty": 1
+        }
+      ],
+      "species": [
+        {
+          "name": "긴점박이올빼미",
+          "kind": "bird",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "노랑무늬붓꽃",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "월정사",
+          "lat": 37.731,
+          "lon": 128.592,
+          "transit": "진부시외버스터미널 버스 20분",
+          "parking": "월정사 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 87,
+        "ny": 132
+      },
+      "airRegion": "강원",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "chiaksan",
+      "name": "치악산",
+      "tagline": "된비알로 이름난 비로봉 오름길",
+      "region": "강원",
+      "sigungu": "강원 원주시",
+      "lat": 37.3714,
+      "lon": 128.0553,
+      "elevation": 1288,
+      "peaks": [
+        {
+          "name": "비로봉",
+          "elevation": 1288
+        }
+      ],
+      "parkType": "national",
+      "parkName": "치악산국립공원",
+      "isTop100": true,
+      "difficulty": 4,
+      "courses": [
+        {
+          "name": "구룡사~비로봉",
+          "distanceKm": 5.6,
+          "durationMin": 210,
+          "difficulty": 4
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "구룡탐방지원센터",
+          "lat": 37.383,
+          "lon": 128.048,
+          "transit": "원주 시내버스 41번",
+          "parking": "구룡 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 78,
+        "ny": 123
+      },
+      "airRegion": "강원",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "taebaeksan",
+      "name": "태백산",
+      "tagline": "주목 군락과 겨울 눈꽃",
+      "region": "강원",
+      "sigungu": "강원 태백시",
+      "lat": 37.0967,
+      "lon": 128.9161,
+      "elevation": 1567,
+      "peaks": [
+        {
+          "name": "장군봉",
+          "elevation": 1567
+        },
+        {
+          "name": "천제단",
+          "elevation": 1560
+        }
+      ],
+      "parkType": "national",
+      "parkName": "태백산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "유일사~장군봉",
+          "distanceKm": 4.0,
+          "durationMin": 150,
+          "difficulty": 3
+        },
+        {
+          "name": "당골~천제단",
+          "distanceKm": 4.4,
+          "durationMin": 165,
+          "difficulty": 3
+        }
+      ],
+      "species": [
+        {
+          "name": "열목어",
+          "kind": "fish",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "주목",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "유일사매표소",
+          "lat": 37.115,
+          "lon": 128.908,
+          "transit": "태백시외버스터미널 버스 20분",
+          "parking": "유일사 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 93,
+        "ny": 117
+      },
+      "airRegion": "강원",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "songnisan",
+      "name": "속리산",
+      "tagline": "법주사와 문장대의 기암",
+      "region": "충북",
+      "sigungu": "충북 보은군",
+      "lat": 36.5433,
+      "lon": 127.8203,
+      "elevation": 1058,
+      "peaks": [
+        {
+          "name": "천왕봉",
+          "elevation": 1058
+        },
+        {
+          "name": "문장대",
+          "elevation": 1033
+        }
+      ],
+      "parkType": "national",
+      "parkName": "속리산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "법주사~문장대",
+          "distanceKm": 6.0,
+          "durationMin": 210,
+          "difficulty": 3
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "법주사탐방지원센터",
+          "lat": 36.541,
+          "lon": 127.833,
+          "transit": "보은 시내버스",
+          "parking": "속리산 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 75,
+        "ny": 105
+      },
+      "airRegion": "충북",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "gyeryongsan",
+      "name": "계룡산",
+      "tagline": "닭볏 같은 능선, 자연성릉",
+      "region": "충남",
+      "sigungu": "충남 공주시",
+      "lat": 36.3419,
+      "lon": 127.2094,
+      "elevation": 847,
+      "peaks": [
+        {
+          "name": "천황봉",
+          "elevation": 847
+        },
+        {
+          "name": "관음봉",
+          "elevation": 766
+        },
+        {
+          "name": "삼불봉",
+          "elevation": 775
+        }
+      ],
+      "parkType": "national",
+      "parkName": "계룡산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "동학사~관음봉",
+          "distanceKm": 4.0,
+          "durationMin": 150,
+          "difficulty": 3
+        },
+        {
+          "name": "갑사~금잔디고개",
+          "distanceKm": 3.5,
+          "durationMin": 120,
+          "difficulty": 3
+        }
+      ],
+      "species": [
+        {
+          "name": "호반새",
+          "kind": "bird",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "깽깽이풀",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "동학사탐방지원센터",
+          "lat": 36.339,
+          "lon": 127.236,
+          "transit": "대전 시내버스 107번",
+          "parking": "동학사 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 64,
+        "ny": 100
+      },
+      "airRegion": "충남",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "naejangsan",
+      "name": "내장산",
+      "tagline": "단풍 일번지, 백양사 가는 길",
+      "region": "전북",
+      "sigungu": "전북 정읍시",
+      "lat": 35.4844,
+      "lon": 126.8886,
+      "elevation": 763,
+      "peaks": [
+        {
+          "name": "신선봉",
+          "elevation": 763
+        },
+        {
+          "name": "까치봉",
+          "elevation": 717
+        }
+      ],
+      "parkType": "national",
+      "parkName": "내장산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "내장사~신선봉",
+          "distanceKm": 5.0,
+          "durationMin": 180,
+          "difficulty": 3
+        },
+        {
+          "name": "케이블카~전망대",
+          "distanceKm": 0.6,
+          "durationMin": 20,
+          "difficulty": 1
+        }
+      ],
+      "species": [
+        {
+          "name": "비단벌레",
+          "kind": "insect",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "진노랑상사화",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "내장산탐방지원센터",
+          "lat": 35.49,
+          "lon": 126.893,
+          "transit": "정읍역 버스 171번",
+          "parking": "내장산 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 59,
+        "ny": 81
+      },
+      "airRegion": "전북",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "mudeungsan",
+      "name": "무등산",
+      "tagline": "주상절리 서석대와 억새 능선",
+      "region": "광주",
+      "sigungu": "광주 동구",
+      "lat": 35.1342,
+      "lon": 127.0003,
+      "elevation": 1187,
+      "peaks": [
+        {
+          "name": "천왕봉",
+          "elevation": 1187
+        },
+        {
+          "name": "서석대",
+          "elevation": 1100
+        },
+        {
+          "name": "입석대",
+          "elevation": 1017
+        }
+      ],
+      "parkType": "national",
+      "parkName": "무등산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "증심사~서석대",
+          "distanceKm": 5.5,
+          "durationMin": 180,
+          "difficulty": 3
+        },
+        {
+          "name": "원효사~서석대",
+          "distanceKm": 4.2,
+          "durationMin": 150,
+          "difficulty": 3
+        }
+      ],
+      "species": [
+        {
+          "name": "수달",
+          "kind": "mammal",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "털조장나무",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "증심사탐방지원센터",
+          "lat": 35.129,
+          "lon": 126.98,
+          "transit": "광주 시내버스 1187번",
+          "parking": "증심사 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 61,
+        "ny": 74
+      },
+      "airRegion": "광주",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "palgongsan",
+      "name": "팔공산",
+      "tagline": "갓바위와 비로봉의 대구 진산",
+      "region": "대구",
+      "sigungu": "대구 동구",
+      "lat": 36.0072,
+      "lon": 128.6961,
+      "elevation": 1193,
+      "peaks": [
+        {
+          "name": "비로봉",
+          "elevation": 1193
+        },
+        {
+          "name": "동봉",
+          "elevation": 1167
+        },
+        {
+          "name": "서봉",
+          "elevation": 1153
+        }
+      ],
+      "parkType": "national",
+      "parkName": "팔공산국립공원",
+      "isTop100": true,
+      "difficulty": 3,
+      "courses": [
+        {
+          "name": "동화사~동봉",
+          "distanceKm": 4.5,
+          "durationMin": 165,
+          "difficulty": 3
+        },
+        {
+          "name": "갓바위 오름",
+          "distanceKm": 1.5,
+          "durationMin": 50,
+          "difficulty": 2
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "동화사",
+          "lat": 35.988,
+          "lon": 128.695,
+          "transit": "대구 급행1번",
+          "parking": "동화사 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 90,
+        "ny": 94
+      },
+      "airRegion": "대구",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "woraksan",
+      "name": "월악산",
+      "tagline": "충주호를 내려다보는 영봉의 암벽",
+      "region": "충북",
+      "sigungu": "충북 제천시",
+      "lat": 36.8867,
+      "lon": 128.1103,
+      "elevation": 1097,
+      "peaks": [
+        {
+          "name": "영봉",
+          "elevation": 1097
+        }
+      ],
+      "parkType": "national",
+      "parkName": "월악산국립공원",
+      "isTop100": true,
+      "difficulty": 4,
+      "courses": [
+        {
+          "name": "덕주사~영봉",
+          "distanceKm": 6.5,
+          "durationMin": 240,
+          "difficulty": 5
+        }
+      ],
+      "species": [
+        {
+          "name": "산양",
+          "kind": "mammal",
+          "flagship": true,
+          "badge": "깃대종"
+        },
+        {
+          "name": "솔나리",
+          "kind": "plant",
+          "flagship": true,
+          "badge": "깃대종"
+        }
+      ],
+      "trailheads": [
+        {
+          "name": "덕주탐방지원센터",
+          "lat": 36.872,
+          "lon": 128.133,
+          "transit": "제천 시내버스",
+          "parking": "덕주골 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 80,
+        "ny": 112
+      },
+      "airRegion": "충북",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "gayasan",
+      "name": "가야산",
+      "tagline": "해인사를 품은 만물상 능선",
+      "region": "경남",
+      "sigungu": "경남 합천군",
+      "lat": 35.8225,
+      "lon": 128.1197,
+      "elevation": 1433,
+      "peaks": [
+        {
+          "name": "상왕봉",
+          "elevation": 1433
+        },
+        {
+          "name": "칠불봉",
+          "elevation": 1433
+        }
+      ],
+      "parkType": "national",
+      "parkName": "가야산국립공원",
+      "isTop100": true,
+      "difficulty": 4,
+      "courses": [
+        {
+          "name": "백운동~상왕봉",
+          "distanceKm": 4.5,
+          "durationMin": 180,
+          "difficulty": 4
+        },
+        {
+          "name": "해인사~상왕봉",
+          "distanceKm": 4.0,
+          "durationMin": 180,
+          "difficulty": 4
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "백운동탐방지원센터",
+          "lat": 35.833,
+          "lon": 128.137,
+          "transit": "성주 시내버스",
+          "parking": "백운동 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 80,
+        "ny": 89
+      },
+      "airRegion": "경남",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "juwangsan",
+      "name": "주왕산",
+      "tagline": "협곡과 폭포가 이어지는 절골",
+      "region": "경북",
+      "sigungu": "경북 청송군",
+      "lat": 36.3961,
+      "lon": 129.1867,
+      "elevation": 720,
+      "peaks": [
+        {
+          "name": "주봉",
+          "elevation": 720
+        }
+      ],
+      "parkType": "national",
+      "parkName": "주왕산국립공원",
+      "isTop100": true,
+      "difficulty": 2,
+      "courses": [
+        {
+          "name": "대전사~용추폭포",
+          "distanceKm": 3.0,
+          "durationMin": 80,
+          "difficulty": 1
+        },
+        {
+          "name": "대전사~주봉",
+          "distanceKm": 4.0,
+          "durationMin": 150,
+          "difficulty": 3
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "주왕산탐방지원센터",
+          "lat": 36.394,
+          "lon": 129.19,
+          "transit": "청송 시내버스",
+          "parking": "상의 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 99,
+        "ny": 102
+      },
+      "airRegion": "경북",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "manisan",
+      "name": "마니산",
+      "tagline": "참성단에서 보는 서해 낙조",
+      "region": "인천",
+      "sigungu": "인천 강화군",
+      "lat": 37.6119,
+      "lon": 126.4392,
+      "elevation": 472,
+      "peaks": [
+        {
+          "name": "참성단",
+          "elevation": 472
+        }
+      ],
+      "parkType": "none",
+      "parkName": null,
+      "isTop100": true,
+      "difficulty": 2,
+      "courses": [
+        {
+          "name": "정수사~참성단",
+          "distanceKm": 2.9,
+          "durationMin": 100,
+          "difficulty": 3
+        },
+        {
+          "name": "단군로",
+          "distanceKm": 2.4,
+          "durationMin": 90,
+          "difficulty": 2
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "마니산국민관광지",
+          "lat": 37.607,
+          "lon": 126.447,
+          "transit": "강화터미널 버스",
+          "parking": "마니산 주차장"
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 51,
+        "ny": 128
+      },
+      "airRegion": "인천",
+      "photoURL": null,
+      "photoCredit": null
+    },
+    {
+      "id": "bulamsan",
+      "name": "불암산",
+      "tagline": "한 시간이면 오르는 서울 근교 바위산",
+      "region": "서울",
+      "sigungu": "서울 노원구",
+      "lat": 37.6462,
+      "lon": 127.0961,
+      "elevation": 508,
+      "peaks": [
+        {
+          "name": "정상",
+          "elevation": 508
+        }
+      ],
+      "parkType": "none",
+      "parkName": null,
+      "isTop100": false,
+      "difficulty": 2,
+      "courses": [
+        {
+          "name": "불암산공원~정상",
+          "distanceKm": 2.6,
+          "durationMin": 90,
+          "difficulty": 2
+        }
+      ],
+      "species": [],
+      "trailheads": [
+        {
+          "name": "불암산공원 입구",
+          "lat": 37.639,
+          "lon": 127.08,
+          "transit": "7호선 중계역 도보 15분",
+          "parking": null
+        }
+      ],
+      "kmaMountainCode": null,
+      "grid": {
+        "nx": 62,
+        "ny": 128
+      },
+      "airRegion": "서울",
+      "photoURL": null,
+      "photoCredit": null
+    }
+  ]
+}
