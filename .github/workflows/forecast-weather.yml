@@ -1,0 +1,50 @@
+name: forecast-weather
+
+# 3시간마다 산별 날씨·대기질·특보를 받아 forecast/<id>.json 으로 배포한다.
+# 기상청 발표가 하루 8회(02·05·08·11·14·17·20·23시)라 그보다 자주 받을 이유가 없다.
+# public 레포이므로 Actions 분은 무제한 — 가장 무거운 워크플로를 여기 두는 이유다.
+
+on:
+  schedule:
+    - cron: "20 */3 * * *"   # 발표 20분 뒤에 받는다 (KMA 는 정시 직후 갱신)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: forecast-weather
+  cancel-in-progress: true
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    # 없으면 기본 360분 — 기상청이 응답을 안 줄 때 잡 하나가 하루치 예산을 태운다.
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install requests
+
+      - name: 날씨·대기질·특보 수집
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+        run: python pipeline/collect_weather.py
+
+      - name: 변경분 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/v1/forecast data/v1/manifest.json
+          # 값이 안 바뀌면 커밋하지 않는다 — 빈 커밋이 쌓이면 checkout 이 느려진다.
+          git diff --cached --quiet && echo "변경 없음" && exit 0
+          git commit -m "forecast: $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push

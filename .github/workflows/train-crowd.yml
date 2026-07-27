@@ -1,0 +1,57 @@
+name: train-crowd
+
+# 혼잡도 모델 학습 (E안 — private 이 아니라 여기서 돈다).
+#
+# 여기서 도는 게 맞는 이유: 입력이 (a) 국립공원공단 실측 탐방객 통계 = 공공데이터,
+# (b) signals 레포가 push 한 정규화 지수 = 파생물 둘뿐이라 네이버 시크릿이 필요 없다.
+# public 레포는 Actions 분이 무제한이므로 private 예산에서 학습 비용이 빠진다.
+
+on:
+  schedule:
+    - cron: "0 19 * * 0"   # 매주 월요일 04:00 KST
+  workflow_dispatch:
+  # signals 레포가 새 지수를 push 하면 바로 재학습한다.
+  repository_dispatch:
+    types: [signals-updated]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: train-crowd
+  cancel-in-progress: true
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install requests numpy
+
+      - name: 국립공원 실측 탐방객 통계 내려받기
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+        run: python pipeline/fetch_visitor_stats.py
+
+      - name: 학습 및 검증
+        # 홀드아웃 MAPE 가 임계치를 넘으면 종료 코드 1 → 기존 모델을 덮어쓰지 않는다.
+        run: python pipeline/train_crowd.py --max-mape 0.45
+
+      - name: 변경분 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/v1/crowd_model.json data/v1/manifest.json
+          git diff --cached --quiet && echo "변경 없음" && exit 0
+          git commit -m "crowd: 모델 재학습"
+          git push

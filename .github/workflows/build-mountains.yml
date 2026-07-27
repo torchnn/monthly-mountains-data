@@ -1,0 +1,61 @@
+name: build-mountains
+
+# 산 마스터 재빌드. 원천이 거의 안 바뀌므로 월 1회면 충분하다.
+#  · 산림청 산정보(3,368개) → 이름·표고·소재지·설명
+#  · 전국등산로표준데이터(2,919건) → 코스·거리·소요시간·난이도
+#  · 100대명산 목록/POI, 전국주요봉우리 POI → 봉우리 표고
+#  · 국립공원 공원경계 → parkType 판정
+#  · 국립공원 깃대종 → species
+#  · 기상청 산악예보 지점 매칭 + 격자 변환
+
+on:
+  schedule:
+    - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "대상 산 수 (비우면 전체 300)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-mountains
+  cancel-in-progress: false   # 마스터 빌드는 중간에 끊지 않는다
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install requests
+
+      - name: 산 마스터 빌드
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          MOUNTAIN_LIMIT: ${{ inputs.limit }}
+        run: python pipeline/build_mountains.py
+
+      - name: 검증
+        # 산 수·필수 필드·좌표 범위를 확인한다. 실패하면 커밋하지 않는다.
+        run: python pipeline/validate.py data/v1/mountains.json
+
+      - name: 변경분 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/v1/mountains.json data/v1/manifest.json
+          git diff --cached --quiet && echo "변경 없음" && exit 0
+          git commit -m "mountains: 마스터 재빌드"
+          git push
