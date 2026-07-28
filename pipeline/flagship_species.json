@@ -1,0 +1,329 @@
+{
+  "source": "국립공원공단 국립공원깃대종 (https://www.knps.or.kr/portal/main/contents.do?menuNo=7020053)",
+  "fetchedAt": "2026-07-28",
+  "note": "build_mountains.py 가 국립공원 소속 산의 species 를 이 표에서 채운다. 로그인·인증키 불필요.",
+  "parks": {
+    "지리산": [
+      {
+        "name": "반달가슴곰",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "히어리",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "경주": [
+      {
+        "name": "원앙",
+        "kind": "bird",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "소나무",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "계룡산": [
+      {
+        "name": "호반새",
+        "kind": "bird",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "깽깽이풀",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "한려해상": [
+      {
+        "name": "팔색조",
+        "kind": "bird",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "거머리말",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "설악산": [
+      {
+        "name": "산양",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "눈잣나무",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "속리산": [
+      {
+        "name": "하늘다람쥐",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "망개나무",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "내장산": [
+      {
+        "name": "비단벌레",
+        "kind": "insect",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "진노랑상사화",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "가야산": [
+      {
+        "name": "삵",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "설앵초",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "덕유산": [
+      {
+        "name": "금강모치",
+        "kind": "fish",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "구상나무",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "오대산": [
+      {
+        "name": "긴점박이올빼미",
+        "kind": "bird",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "노랑무늬붓꽃",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "주왕산": [
+      {
+        "name": "솔부엉이",
+        "kind": "bird",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "둥근잎꿩의비름",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "태안해안": [
+      {
+        "name": "표범장지뱀",
+        "kind": "amphibian",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "매화마름",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "다도해해상": [
+      {
+        "name": "상괭이",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "풍란",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "치악산": [
+      {
+        "name": "물두꺼비",
+        "kind": "amphibian",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "금강초롱꽃",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "월악산": [
+      {
+        "name": "산양",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "솔나리",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "북한산": [
+      {
+        "name": "오색딱다구리",
+        "kind": "bird",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "산개나리",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "소백산": [
+      {
+        "name": "여우",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "모데미풀",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "월출산": [
+      {
+        "name": "남생이",
+        "kind": "amphibian",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "끈끈이주걱",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "변산반도": [
+      {
+        "name": "부안종개",
+        "kind": "fish",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "변산바람꽃",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "무등산": [
+      {
+        "name": "수달",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "털조장나무",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "태백산": [
+      {
+        "name": "열목어",
+        "kind": "fish",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "주목",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "한라산": [
+      {
+        "name": "산굴뚝나비",
+        "kind": "insect",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "구상나무",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ],
+    "팔공산": [
+      {
+        "name": "담비",
+        "kind": "mammal",
+        "flagship": true,
+        "badge": "깃대종"
+      },
+      {
+        "name": "국화방망이",
+        "kind": "plant",
+        "flagship": true,
+        "badge": "깃대종"
+      }
+    ]
+  }
+}
