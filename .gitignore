@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .venv/
+
+# 원본 CSV 는 공공데이터포털에서 받는다 (2.4MB, fetch_visitor_stats.py 가 내려받음)
+data/raw/
