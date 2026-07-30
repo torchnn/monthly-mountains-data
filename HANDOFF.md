@@ -28,7 +28,7 @@ https://torchnn.github.io/monthly-mountains-data/data/v1/
   mountains.json      ✅ 24개 (시드) — 키가 있으면 300개
   crowd_model.json    ✅ 실측 학습본
   signals/<id>.json   ✅ 25개 (signals 레포가 push)
-  restaurants/<id>.json ✅ (signals 레포가 push)
+  restaurants/<id>.json ✅ (signals 레포가 push · 네이버 기준 + 구글 단건 보강)
   forecast/<id>.json  ❌ 키 필요
 ```
 
