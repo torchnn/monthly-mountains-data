@@ -1,0 +1,5 @@
+# 워크플로가 setup-python 의 cache: pip 을 쓰므로 이 파일이 반드시 있어야 한다.
+# 없으면 "No file ... matched to [**/requirements.txt or **/pyproject.toml]" 로
+# 파이썬 설치 단계에서 즉시 죽어, 정작 진짜 실패 원인이 로그에 드러나지 않는다.
+requests>=2.31
+numpy>=1.26        # train_crowd.py 회귀 적합
