@@ -9,8 +9,10 @@ name: build-mountains
 #  · 기상청 산악예보 지점 매칭 + 격자 변환
 
 on:
-  schedule:
-    - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
+  # ⏸ 크론 정지 — pipeline/build_mountains.py 가 아직 없다. 자동 실행하면 매번 실패만 쌓인다.
+  #    갖춰지면 아래 두 줄의 주석을 되돌린다. (README "현재 상태" 참고)
+  # schedule:
+  # - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
   workflow_dispatch:
     inputs:
       limit:
@@ -39,7 +41,7 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - run: pip install requests
+      - run: pip install -r requirements.txt
 
       - name: 산 마스터 빌드
         env:
