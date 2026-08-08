@@ -87,6 +87,12 @@ def validate_mountains(d: dict) -> None:
         if isinstance(lon, (int, float)) and not 124 <= lon <= 132:
             err(f"{w}: lon {lon} 이 한반도 범위(124~132) 밖")
 
+        # 타입만 보면 못 잡는 값들. 실제로 표고 0m 인 산 21개가 이 검사를 통과해 배포될 뻔했다
+        # (산림청 산정보에 표고가 비어 있는 항목이 있다). 스키마가 맞아도 화면에는 '해발 0m'다.
+        elev = m.get("elevation")
+        if isinstance(elev, int) and not 50 <= elev <= 2000:
+            err(f"{w}: elevation {elev}m — 국내 산 범위(50~2000m) 밖")
+
         grid = need(m, w, "grid", dict)
         if isinstance(grid, dict):
             need(grid, f"{w}.grid", "nx", int)
@@ -103,6 +109,18 @@ def validate_mountains(d: dict) -> None:
             need(c, cw, "durationMin", int)
             need(c, cw, "difficulty", int)
             opt(c, cw, "ascentM", int)
+
+            # 등산로 원본의 '구간명'은 하나의 경로가 아니라 여러 갈래를 아우르는 라벨이라,
+            # 이름으로 묶어 합치면 45km·22시간짜리 '코스'가 나온다. 사람이 하루에 걷는 게 아니다.
+            km, mins = c.get("distanceKm"), c.get("durationMin")
+            if isinstance(km, (int, float)) and not 0 < km <= 25:
+                err(f"{cw}: distanceKm {km} — 하루 코스 범위(0~25km) 밖. 구간 묶음이 아닌지 확인")
+            if isinstance(mins, int) and not 0 < mins <= 600:
+                err(f"{cw}: durationMin {mins} — 하루 코스 범위(0~600분) 밖")
+            if isinstance(km, (int, float)) and isinstance(mins, int) and km > 0 and mins > 0:
+                kmh = km / (mins / 60)
+                if not 0.8 <= kmh <= 6.0:
+                    err(f"{cw}: 등산 속도 {kmh:.1f}km/h — 비현실적(0.8~6.0)")
 
         for s in need(m, w, "species", list) or []:
             sw = f"{w}.species[{s.get('name','?')}]"
@@ -157,6 +175,10 @@ def validate_crowd_model(d: dict) -> None:
         if mp is not None and mp not in profiles:
             err(f"{w}: monthProfile '{mp}' 가 monthProfiles 에 없음")
 
+        base = p.get("baseIndex")
+        if isinstance(base, (int, float)) and not 0 < base <= 100:
+            err(f"{w}: baseIndex {base} — 0 초과 100 이하여야 한다")
+
     v = d.get("validation")
     if isinstance(v, dict):
         need(v, "validation", "mape", (int, float))
@@ -164,6 +186,31 @@ def validate_crowd_model(d: dict) -> None:
 
 
 VALIDATORS = {"mountains.json": validate_mountains, "crowd_model.json": validate_crowd_model}
+
+
+def _check_crowd_coverage(targets: list[Path]) -> None:
+    """마스터의 모든 산이 혼잡도 파라미터를 갖고 있는지.
+
+    스키마로는 못 잡히는 문제다 — 파라미터가 없는 산은 앱이 `Params.fallback` 으로
+    조용히 넘어가 **baseIndex 45 · 기본 곡선**을 쓴다. 파일은 멀쩡한데 그 산들의
+    혼잡도가 전부 똑같아진다. 산을 24개에서 300개로 늘렸을 때 실제로 그랬다.
+    """
+    by_name = {t.name: t for t in targets}
+    if not {"mountains.json", "crowd_model.json"} <= set(by_name):
+        return
+    try:
+        cat = json.loads(by_name["mountains.json"].read_text(encoding="utf-8"))
+        model = json.loads(by_name["crowd_model.json"].read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 — 파싱 실패는 위에서 이미 보고됐다
+        return
+
+    params = model.get("mountains") or {}
+    missing = [m["id"] for m in cat.get("mountains", []) if m["id"] not in params]
+    if missing:
+        err(f"crowd_model: 파라미터 없는 산 {len(missing)}개 — 앱에서 전부 같은 폴백을 쓴다 "
+            f"({', '.join(missing[:5])}{' …' if len(missing) > 5 else ''})")
+    else:
+        print(f"  ✓ 혼잡도 파라미터가 산 {len(cat.get('mountains', []))}개를 모두 덮는다")
 
 
 def run(path: Path) -> None:
@@ -201,6 +248,8 @@ def main() -> int:
     print(f"스키마 검사 — 앱 Swift 디코더 계약 기준 ({len(targets)}개 파일)")
     for t in targets:
         run(t)
+
+    _check_crowd_coverage(targets)
 
     if errors:
         print(f"\n✗ {len(errors)}건 — 이대로 배포하면 앱이 빈 화면을 보여줍니다:")

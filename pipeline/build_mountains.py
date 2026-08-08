@@ -52,6 +52,9 @@ TIMEOUT = 30
 RETRIES = 3
 TARGET = int(os.environ.get("MOUNTAIN_LIMIT") or 0) or 300
 
+# 하루 코스로 볼 수 있는 상한. 넘는 건 원본의 구간 묶음이지 경로가 아니다.
+COURSE_MAX_KM, COURSE_MAX_MIN = 25.0, 600
+
 FOREST = "https://apis.data.go.kr/1400000/service/cultureInfoService2/mntInfoOpenAPI2"
 TOP100 = "https://apis.data.go.kr/B553662/top100FamtListBasiInfoService/getTop100FamtListBasiInfoList"
 PEAKS = "https://apis.data.go.kr/B553662/culturalInfoService/getCulturalInfoList"
@@ -195,26 +198,34 @@ def fetch_photo(name: str, lat: float, lon: float) -> tuple[str | None, str | No
     ⚠️ 키워드 검색은 '북한산' 으로 '북한산 둘레캠프'(contenttypeid 28) 를 1등으로 준다.
        관광지(12)·자연(cat1 A01) 로 좁히고 좌표 거리도 확인해야 산 사진이 나온다.
     """
-    xml = _get(TOUR, {"numOfRows": 20, "pageNo": 1, "MobileOS": "ETC", "MobileApp": "monthly-mountains",
-                      "keyword": name, "arrange": "O", "contentTypeId": 12})
-    if not xml:
-        return None, None
-    best = None
-    for row in _tags(xml):
-        img = row.get("firstimage") or ""
-        if not img.startswith("http"):
+    # 이름에 괄호가 붙은 산('백운산(광양)')은 그대로 검색하면 0건이다.
+    # 괄호를 떼면 붙는다 — 동명이산 오염은 아래 좌표 검증이 막는다.
+    queries = [name]
+    stripped = re.sub(r"\(.*?\)", "", name).strip()
+    if stripped and stripped != name:
+        queries.append(stripped)
+
+    for query in queries:
+        xml = _get(TOUR, {"numOfRows": 20, "pageNo": 1, "MobileOS": "ETC", "MobileApp": "monthly-mountains",
+                          "keyword": query, "arrange": "O", "contentTypeId": 12})
+        if not xml:
             continue
-        try:
-            d = haversine_m(lat, lon, float(row["mapy"]), float(row["mapx"]))
-        except (KeyError, ValueError, TypeError):
-            continue
-        if d > 15000:                       # 15km 밖이면 다른 곳이다
-            continue
-        if best is None or d < best[0]:
-            best = (d, img)
-    if not best:
-        return None, None
-    return best[1], "한국관광공사 (공공누리 제1유형)"
+        best = None
+        for row in _tags(xml):
+            img = row.get("firstimage") or ""
+            if not img.startswith("http"):
+                continue
+            try:
+                d = haversine_m(lat, lon, float(row["mapy"]), float(row["mapx"]))
+            except (KeyError, ValueError, TypeError):
+                continue
+            if d > 15000:                   # 15km 밖이면 다른 곳이다
+                continue
+            if best is None or d < best[0]:
+                best = (d, img)
+        if best:
+            return best[1], "한국관광공사 (공공누리 제1유형)"
+    return None, None
 
 
 # ---------------------------------------------------------------- 조립
@@ -325,8 +336,10 @@ def build(limit: int, want_photo: bool) -> dict:
     for name in prior:
         picked.setdefault(name, {"top100": False})
 
+    # 표고를 못 구해 탈락하는 산이 나오므로 목표보다 넉넉히 고르고 마지막에 자른다.
+    pool = int(limit * 1.2) + 10
     for t in sorted(trails["mountains"], key=lambda x: -x["totalKm"]):
-        if len(picked) >= limit:
+        if len(picked) >= pool:
             break
         base = t["name"].split("_")[0]
         # 등산로 원본에는 '낙동정맥'·'백두대간트레일인제' 같은 장거리 노선도 섞여 있다.
@@ -336,10 +349,12 @@ def build(limit: int, want_photo: bool) -> dict:
             continue
         picked.setdefault(base, {"top100": False, "trail": t})
 
-    names = list(picked)[:limit]
-    print(f"\n대상 {len(names)}개 (100대명산 {sum(1 for n in names if picked[n].get('top100'))}개 포함)")
+    names = list(picked)[:pool]
+    print(f"\n후보 {len(names)}개 → 목표 {limit}개 "
+          f"(100대명산 {sum(1 for n in names if picked[n].get('top100'))}개 포함)")
 
-    mountains, stats = [], {"trail": 0, "story": 0, "photo": 0, "peaks": 0, "species": 0, "park": 0}
+    mountains, skipped_no_elev = [], []
+    stats = {"trail": 0, "story": 0, "photo": 0, "peaks": 0, "species": 0, "park": 0}
     for i, name in enumerate(names, 1):
         src = picked[name]
         finfo = forest_by_name.get(name, {})
@@ -361,7 +376,17 @@ def build(limit: int, want_photo: bool) -> dict:
         if lat is None or not (33 <= lat <= 39 and 124 <= lon <= 132):
             continue
 
-        # 표고: 100대명산 > 산정보 > 기존
+        # 주변 3km 안의 봉우리 POI. 표고 폴백과 `peaks` 둘 다에 쓰므로 먼저 모은다.
+        nearby = []
+        for p in peaks_raw:
+            try:
+                plat, plon, alt = float(p["lat"]), float(p["lot"]), float(p.get("aslAltide") or 0)
+            except (KeyError, ValueError):
+                continue
+            if alt > 0 and haversine_m(lat, lon, plat, plon) <= 3000:
+                nearby.append(((p.get("frtrlNm") or "").strip(), alt))
+
+        # 표고: 100대명산 > 산정보 > 기존 > 주변 봉우리 최고점
         elevation = 0
         for cand in (t100.get("aslAltide"), finfo.get("mntihigh")):
             try:
@@ -372,6 +397,13 @@ def build(limit: int, want_photo: bool) -> dict:
                 break
         if elevation <= 0 and prev:
             elevation = prev["elevation"]
+        if elevation <= 0 and nearby:
+            # 산정보에 표고가 비어 있는 산이 실제로 있다(21개가 0m 로 나갔다).
+            # 봉우리 POI 는 실측 고도를 갖고 있으니 주변 최고점으로 대신한다.
+            elevation = int(round(max(alt for _, alt in nearby)))
+        if elevation <= 0:
+            skipped_no_elev.append(name)
+            continue
 
         # 등산로: mtnCd 직결이 1순위, 없으면 이름+좌표 매칭
         if trail is None:
@@ -389,15 +421,24 @@ def build(limit: int, want_photo: bool) -> dict:
         if park_type == "national":
             stats["park"] += 1
 
+        # 원본의 '구간명'은 하나의 등산 경로가 아니라 여러 갈래를 아우르는 라벨이다.
+        # 그래서 이름으로 묶어 합치면 지리산 '중태리구간' 45km·22시간 같은 게 나온다 —
+        # 사람이 하루에 걷는 코스가 아니므로 코스로 내보내지 않는다.
+        # 제대로 하려면 구간을 그래프로 이어 들머리→정상 경로를 찾아야 한다(별도 작업).
         courses = []
-        for c in (trail["courses"] if trail else [])[:8]:
+        for c in (trail["courses"] if trail else []):
+            km, mins = round(c["distanceKm"], 2), int(c["durationMin"])
+            if not (0 < km <= COURSE_MAX_KM and 0 < mins <= COURSE_MAX_MIN):
+                continue
             courses.append({
                 "name": c["name"],
-                "distanceKm": round(c["distanceKm"], 2),
-                "durationMin": int(c["durationMin"]),
+                "distanceKm": km,
+                "durationMin": mins,
                 "difficulty": _course_difficulty(c, 3),
                 "ascentM": None,            # 원본 GPX 고도가 전부 0 (함정 10)
             })
+            if len(courses) >= 8:
+                break
 
         trailheads = []
         for j, th in enumerate((trail["trailheads"] if trail else [])[:8], 1):
@@ -414,16 +455,11 @@ def build(limit: int, want_photo: bool) -> dict:
         #    지점의 고도**다. 거르지 않으면 1,051m 가리산에 286m 짜리 '가리산' 봉우리가 붙는다.
         #    정상 부근만 남기려면 산 표고에 견줘 걸러야 한다.
         lo = max(200.0, elevation * 0.7)
-        hi = elevation * 1.05 if elevation else float("inf")
+        hi = elevation * 1.05
         peaks = []
-        for p in peaks_raw:
-            try:
-                plat, plon, alt = float(p["lat"]), float(p["lot"]), float(p.get("aslAltide") or 0)
-            except (KeyError, ValueError):
+        for pname, alt in nearby:
+            if not (lo <= alt <= hi):
                 continue
-            if not (lo <= alt <= hi) or haversine_m(lat, lon, plat, plon) > 3000:
-                continue
-            pname = (p.get("frtrlNm") or "").strip()
             # `frtrlNm` 은 봉우리명일 때도 있고 그냥 등산로명일 때도 있다.
             # '…봉' 으로 끝나는 것만 봉우리로 인정하고, 산 이름과 같은 건 버린다
             # (안 그러면 629m 관악산에 '자운암국기대(466m)', 675m 감악산에 '감악산(575m)'이 붙는다).
@@ -477,8 +513,10 @@ def build(limit: int, want_photo: bool) -> dict:
             "photoURL": photo_url,
             "photoCredit": photo_credit,
         })
+        if len(mountains) >= limit:         # 목표를 채웠으면 남은 후보는 부르지 않는다
+            break
         if i % 50 == 0:
-            print(f"  {i}/{len(names)} …", flush=True)
+            print(f"  {len(mountains)}/{limit} …", flush=True)
 
     # id 중복 방지 — 동명이산이 둘 다 뽑히면 뒤엣것에 꼬리를 붙인다.
     seen: dict[str, int] = {}
@@ -491,6 +529,8 @@ def build(limit: int, want_photo: bool) -> dict:
 
     n = len(mountains)
     print(f"\n산 {n}개")
+    if skipped_no_elev:
+        print(f"  ⚠️ 표고를 못 구해 제외 {len(skipped_no_elev)}개: {', '.join(skipped_no_elev[:6])}")
     for k, label in [("trail", "등산로"), ("story", "산이야기"), ("peaks", "봉우리"),
                      ("species", "동식물"), ("park", "국립공원"), ("photo", "사진")]:
         print(f"  {label:<8} {stats[k]:>4}/{n} ({stats[k]/n:.0%})")

@@ -6,11 +6,15 @@ name: build-mountains
 #  · 100대명산 목록/POI, 전국주요봉우리 POI → 봉우리 표고
 #  · 국립공원 공원경계 → parkType 판정
 #  · 국립공원 깃대종 → species
-#  · 기상청 산악예보 지점 매칭 + 격자 변환
+#  · 기상청 단기예보 격자 변환
+#    (산악예보는 포털에 없어 쓰지 않는다 — kmaMountainCode 는 계속 null)
+#
+# 마지막에 혼잡도 산별 파라미터를 마스터 전체로 넓힌다. 이걸 빼먹으면 새로 들어온 산이
+# 앱에서 전부 같은 폴백 값(baseIndex 45)을 쓰게 되어 혼잡도 정렬이 무의미해진다.
 
 on:
-  # ⏸ 크론 정지 — pipeline/build_mountains.py 가 아직 없다. 자동 실행하면 매번 실패만 쌓인다.
-  #    갖춰지면 아래 두 줄의 주석을 되돌린다. (README "현재 상태" 참고)
+  # ⏸ 크론 정지 — 켜면 매월 마스터가 자동 갱신·커밋된다.
+  #    스크립트는 갖춰졌으니(2026-08-08) 아래 두 줄의 주석만 되돌리면 된다.
   # schedule:
   # - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
   workflow_dispatch:
@@ -50,14 +54,22 @@ jobs:
         run: python pipeline/build_mountains.py
 
       - name: 검증
-        # 산 수·필수 필드·좌표 범위를 확인한다. 실패하면 커밋하지 않는다.
+        # 산 수·필수 필드·좌표·표고·코스 범위를 확인한다. 실패하면 커밋하지 않는다.
         run: python pipeline/validate.py data/v1/mountains.json
+
+      - name: 혼잡도 산별 파라미터 확장
+        # 새로 들어온 산은 앱에서 폴백(baseIndex 45)으로 전부 같아진다 — 여기서 채운다.
+        # 5단계가 한쪽으로 쏠리면 종료 코드 1 이라 커밋되지 않는다.
+        run: python pipeline/build_crowd_params.py
+
+      - name: 혼잡도 모델 검증
+        run: python pipeline/validate.py data/v1/crowd_model.json
 
       - name: 변경분 커밋
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/v1/mountains.json data/v1/manifest.json
+          git add data/v1/mountains.json data/v1/crowd_model.json data/v1/manifest.json
           git diff --cached --quiet && echo "변경 없음" && exit 0
           git commit -m "mountains: 마스터 재빌드"
           git push
