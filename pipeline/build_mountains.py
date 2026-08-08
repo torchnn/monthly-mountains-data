@@ -274,11 +274,19 @@ def _park_of(name: str) -> tuple[str, str | None]:
 
 
 def _difficulty_from(elevation: int, courses: list[dict]) -> int:
-    """산 난이도 1~5. 코스 난이도가 있으면 그 최댓값, 없으면 표고로 가른다."""
-    got = [c["difficulty"] for c in courses if c.get("difficulty")]
+    """산 난이도 1~5.
+
+    코스 난이도의 **중앙값**을 쓰고, 표고로 상한을 씌운다.
+    최댓값을 쓰면 63m 짜리 초록봉이 '어려움'이 된다 — 라우팅이 정상에서 먼 들머리까지
+    이어 붙여 7.8km 코스가 생기고, 그 하나가 산 전체의 난이도를 정해 버리기 때문이다.
+    낮은 산이 어려울 수는 없으므로 표고가 최종 결정권을 갖는다.
+    """
+    ceiling = 1 if elevation < 200 else 2 if elevation < 500 else 3 if elevation < 900 else 5
+    got = sorted(c["difficulty"] for c in courses if c.get("difficulty"))
     if got:
-        return max(1, min(5, max(got)))
-    return 1 if elevation < 300 else 2 if elevation < 600 else 3 if elevation < 1000 else 4
+        median = got[len(got) // 2]
+        return max(1, min(ceiling, median))
+    return min(ceiling, 1 if elevation < 300 else 2 if elevation < 600 else 3 if elevation < 1000 else 4)
 
 
 def _course_difficulty(course: dict, fallback: int) -> int:
@@ -318,7 +326,10 @@ def build(limit: int, want_photo: bool) -> dict:
 
     # 손으로 편집한 코스(24개 산). 라우팅보다 정확하므로 있으면 그걸 쓴다.
     curated_path = PIPE / "curated_courses.json"
-    curated = json.loads(curated_path.read_text())["courses"] if curated_path.exists() else {}
+    _cur = json.loads(curated_path.read_text()) if curated_path.exists() else {}
+    curated = _cur.get("courses", {})
+    curated_taglines = _cur.get("taglines", {})
+    curated_peaks = _cur.get("peaks", {})
 
     # 기존 id 승계 — 나간 id 를 바꾸면 사용자의 즐겨찾기가 끊긴다.
     prior = {}
@@ -497,10 +508,12 @@ def build(limit: int, want_photo: bool) -> dict:
             if pname.endswith("봉") and pname.split("_")[0] != name:
                 peaks.append({"name": pname, "elevation": int(round(alt))})
         peaks = sorted({p["name"]: p for p in peaks}.values(), key=lambda p: -p["elevation"])[:5]
+        # 편집본이 있으면 그게 우선이다. POI 매칭은 837m 북한산에 보현봉(614m)·시단봉(600m)을
+        # 대표 봉우리로 올려 놓는다 — 백운대·인수봉·만경대를 밀어낸다.
+        if curated_peaks.get(name):
+            peaks = curated_peaks[name]
         if peaks:
             stats["peaks"] += 1
-        elif prev and prev.get("peaks"):
-            peaks = prev["peaks"]
 
         species = flagship.get(park_name.replace("국립공원", "")) if park_name else None
         species = species or (prev.get("species") if prev else []) or []
@@ -523,7 +536,9 @@ def build(limit: int, want_photo: bool) -> dict:
         mountains.append({
             "id": prev["id"] if prev else slug(name),
             "name": name,
-            "tagline": (prev.get("tagline") if prev else None) or _tagline(elevation, sido, src.get("top100", False), park_name),
+            # 편집본이 있으면 그것, 없으면 **매번 다시 만든다.**
+            # `prev` 를 쓰면 표고가 0이던 시절의 '강원' 같은 한 줄이 영원히 남는다(실제로 14개 그랬다).
+            "tagline": curated_taglines.get(name) or _tagline(elevation, sido, src.get("top100", False), park_name),
             "story": story,
             "region": sido,
             "sigungu": sigungu or sido,

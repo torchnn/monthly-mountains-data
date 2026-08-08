@@ -723,1932 +723,1932 @@
       "typicalDurationMin": 120
     },
     "chorokbong": {
-      "baseIndex": 12.0,
+      "baseIndex": 8.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 435
     },
     "seungdalsan": {
-      "baseIndex": 12.1,
+      "baseIndex": 8.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "sangeunjeoksan": {
-      "baseIndex": 12.2,
+      "baseIndex": 8.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "mangdeokbong": {
-      "baseIndex": 12.2,
+      "baseIndex": 8.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "seolrimsan": {
-      "baseIndex": 12.3,
+      "baseIndex": 8.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "eokbulsan": {
-      "baseIndex": 12.4,
+      "baseIndex": 8.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "cheongamsan": {
-      "baseIndex": 12.5,
+      "baseIndex": 8.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "munamsan": {
-      "baseIndex": 12.5,
+      "baseIndex": 8.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "sanghwangbong": {
-      "baseIndex": 12.6,
+      "baseIndex": 8.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "samyeongsan": {
-      "baseIndex": 12.7,
+      "baseIndex": 8.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "daedeoksan": {
-      "baseIndex": 12.8,
+      "baseIndex": 8.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "paryongsan": {
-      "baseIndex": 12.8,
+      "baseIndex": 8.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "hogusan": {
-      "baseIndex": 12.9,
+      "baseIndex": 8.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 435
     },
     "manghaesan": {
-      "baseIndex": 13.0,
+      "baseIndex": 8.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "worasan": {
-      "baseIndex": 13.1,
+      "baseIndex": 8.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "gwangjebong": {
-      "baseIndex": 13.1,
+      "baseIndex": 8.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "sangunsan": {
-      "baseIndex": 13.2,
+      "baseIndex": 8.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "osan": {
-      "baseIndex": 13.3,
+      "baseIndex": 8.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 405
     },
     "saebajisan": {
-      "baseIndex": 13.4,
+      "baseIndex": 8.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "bunjibong": {
-      "baseIndex": 13.5,
+      "baseIndex": 9.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 345
     },
     "ahopsan": {
-      "baseIndex": 13.5,
+      "baseIndex": 9.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "jeopseongsan": {
-      "baseIndex": 13.6,
+      "baseIndex": 9.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "majipbong": {
-      "baseIndex": 13.7,
+      "baseIndex": 9.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "haseosan": {
-      "baseIndex": 13.8,
+      "baseIndex": 9.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "nakgasan": {
-      "baseIndex": 13.8,
+      "baseIndex": 9.2,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "choeaksan": {
-      "baseIndex": 13.9,
+      "baseIndex": 9.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "yeonhosan": {
-      "baseIndex": 14.0,
+      "baseIndex": 9.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "yangdalsan": {
-      "baseIndex": 14.1,
+      "baseIndex": 9.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "geonjisan": {
-      "baseIndex": 14.1,
+      "baseIndex": 9.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "bangeosan": {
-      "baseIndex": 14.2,
+      "baseIndex": 9.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "goribong": {
-      "baseIndex": 14.3,
+      "baseIndex": 9.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "mangunsan": {
-      "baseIndex": 14.4,
+      "baseIndex": 9.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "hwangsaebong": {
-      "baseIndex": 14.4,
+      "baseIndex": 9.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 345
     },
     "hamjisan": {
-      "baseIndex": 14.5,
+      "baseIndex": 9.7,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "hubong": {
-      "baseIndex": 14.6,
+      "baseIndex": 9.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 375
     },
     "cheonsaengsan": {
-      "baseIndex": 14.7,
+      "baseIndex": 9.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "baegunbong": {
-      "baseIndex": 14.7,
+      "baseIndex": 9.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "hyeonseongsan": {
-      "baseIndex": 14.8,
+      "baseIndex": 9.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 390
     },
     "bulgwangsan": {
-      "baseIndex": 14.9,
+      "baseIndex": 9.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "midongsan": {
-      "baseIndex": 15.0,
+      "baseIndex": 10.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "mukbangsan": {
-      "baseIndex": 15.1,
+      "baseIndex": 10.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "okgyosan": {
-      "baseIndex": 15.1,
+      "baseIndex": 10.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 240
     },
     "majeoksan": {
-      "baseIndex": 15.2,
+      "baseIndex": 10.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "dodeoksan": {
-      "baseIndex": 15.3,
+      "baseIndex": 10.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "geotdaesan": {
-      "baseIndex": 15.4,
+      "baseIndex": 10.2,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "deoksan": {
-      "baseIndex": 15.4,
+      "baseIndex": 10.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "ilgwangsan": {
-      "baseIndex": 15.5,
+      "baseIndex": 10.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "waryongsan": {
-      "baseIndex": 15.6,
+      "baseIndex": 10.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "geumdongsan": {
-      "baseIndex": 15.7,
+      "baseIndex": 10.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "deokseongsan": {
-      "baseIndex": 15.7,
+      "baseIndex": 10.5,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "jinjosan": {
-      "baseIndex": 15.8,
+      "baseIndex": 10.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "badesan": {
-      "baseIndex": 15.9,
+      "baseIndex": 10.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "mangseolbong": {
-      "baseIndex": 16.0,
+      "baseIndex": 10.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "sambangsan": {
-      "baseIndex": 16.0,
+      "baseIndex": 10.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "taejobong": {
-      "baseIndex": 16.1,
+      "baseIndex": 10.7,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "duribong": {
-      "baseIndex": 16.2,
+      "baseIndex": 10.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "byeokbangsan": {
-      "baseIndex": 16.3,
+      "baseIndex": 10.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "gaphasan": {
-      "baseIndex": 16.4,
+      "baseIndex": 10.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "yunsan": {
-      "baseIndex": 16.4,
+      "baseIndex": 11.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "geumbyeongsan": {
-      "baseIndex": 16.5,
+      "baseIndex": 11.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "hoeumsan": {
-      "baseIndex": 16.6,
+      "baseIndex": 11.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "hanusan": {
-      "baseIndex": 16.7,
+      "baseIndex": 11.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "byeongpungsan": {
-      "baseIndex": 16.7,
+      "baseIndex": 11.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "jusan": {
-      "baseIndex": 16.8,
+      "baseIndex": 11.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "gaejwasan": {
-      "baseIndex": 16.9,
+      "baseIndex": 11.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "ogapsan": {
-      "baseIndex": 17.0,
+      "baseIndex": 11.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "satgatbong": {
-      "baseIndex": 17.0,
+      "baseIndex": 11.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 480
     },
     "bunseongsan": {
-      "baseIndex": 17.1,
+      "baseIndex": 11.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "yongambong": {
-      "baseIndex": 17.2,
+      "baseIndex": 11.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 435
     },
     "odusan": {
-      "baseIndex": 17.3,
+      "baseIndex": 11.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "seokbyeongsan": {
-      "baseIndex": 17.3,
+      "baseIndex": 11.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "jeongsusan": {
-      "baseIndex": 17.4,
+      "baseIndex": 11.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "seongjusan": {
-      "baseIndex": 17.5,
+      "baseIndex": 11.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "naengsan": {
-      "baseIndex": 17.6,
+      "baseIndex": 11.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "suribong": {
-      "baseIndex": 17.7,
+      "baseIndex": 11.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "gyeondusan": {
-      "baseIndex": 17.7,
+      "baseIndex": 11.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "nochusan": {
-      "baseIndex": 17.8,
+      "baseIndex": 11.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 435
     },
     "dareumsan": {
-      "baseIndex": 17.9,
+      "baseIndex": 11.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "jangboksan": {
-      "baseIndex": 18.0,
+      "baseIndex": 12.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "choryebong": {
-      "baseIndex": 18.0,
+      "baseIndex": 12.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "yeohangsan": {
-      "baseIndex": 18.1,
+      "baseIndex": 12.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "saryongsan": {
-      "baseIndex": 18.2,
+      "baseIndex": 12.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "sikjangsan": {
-      "baseIndex": 18.3,
+      "baseIndex": 12.2,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "godeoksan": {
-      "baseIndex": 18.3,
+      "baseIndex": 12.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "dongdaesan": {
-      "baseIndex": 18.4,
+      "baseIndex": 12.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "seounsan": {
-      "baseIndex": 18.5,
+      "baseIndex": 12.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 240
     },
     "woryeosan": {
-      "baseIndex": 18.6,
+      "baseIndex": 12.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "cheonjusan": {
-      "baseIndex": 18.6,
+      "baseIndex": 12.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "geumgwibong": {
-      "baseIndex": 18.7,
+      "baseIndex": 12.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "mukjangsan": {
-      "baseIndex": 18.8,
+      "baseIndex": 12.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "mujesan": {
-      "baseIndex": 18.9,
+      "baseIndex": 12.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "geumseongsan": {
-      "baseIndex": 18.9,
+      "baseIndex": 12.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "yaksubong": {
-      "baseIndex": 19.0,
+      "baseIndex": 12.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 465
     },
     "jongnamsan": {
-      "baseIndex": 19.1,
+      "baseIndex": 12.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "bibongsan": {
-      "baseIndex": 19.2,
+      "baseIndex": 12.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "gwangryeosan": {
-      "baseIndex": 19.3,
+      "baseIndex": 12.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "jieoksan": {
-      "baseIndex": 19.3,
+      "baseIndex": 12.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 405
     },
     "bonghwasan": {
-      "baseIndex": 19.4,
+      "baseIndex": 12.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "geombongsan": {
-      "baseIndex": 19.5,
+      "baseIndex": 13.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "yongdusan": {
-      "baseIndex": 19.6,
+      "baseIndex": 13.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "manroesan": {
-      "baseIndex": 19.6,
+      "baseIndex": 13.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "wangsan": {
-      "baseIndex": 19.7,
+      "baseIndex": 13.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "hanseoksan": {
-      "baseIndex": 19.8,
+      "baseIndex": 13.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "balgyosan": {
-      "baseIndex": 19.9,
+      "baseIndex": 13.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "sudeoksan": {
-      "baseIndex": 19.9,
+      "baseIndex": 13.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "seonuisan": {
-      "baseIndex": 20.0,
+      "baseIndex": 13.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "oseosan": {
-      "baseIndex": 20.1,
+      "baseIndex": 13.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "museongsan": {
-      "baseIndex": 20.2,
+      "baseIndex": 13.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 390
     },
     "geumhaksan": {
-      "baseIndex": 20.2,
+      "baseIndex": 13.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "oeumsan": {
-      "baseIndex": 20.3,
+      "baseIndex": 13.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "apsan": {
-      "baseIndex": 20.4,
+      "baseIndex": 13.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "daeryongsan": {
-      "baseIndex": 20.5,
+      "baseIndex": 13.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "dongsan": {
-      "baseIndex": 20.6,
+      "baseIndex": 13.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "mucheoksan": {
-      "baseIndex": 20.6,
+      "baseIndex": 13.8,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "hwanghaksan": {
-      "baseIndex": 20.7,
+      "baseIndex": 13.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "gorupogisan": {
-      "baseIndex": 20.8,
+      "baseIndex": 13.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "guramsan": {
-      "baseIndex": 20.9,
+      "baseIndex": 13.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "yuhaksan": {
-      "baseIndex": 20.9,
+      "baseIndex": 14.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "joryeongsan": {
-      "baseIndex": 21.0,
+      "baseIndex": 14.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "dosungsan": {
-      "baseIndex": 21.1,
+      "baseIndex": 14.1,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 435
     },
     "eunisan": {
-      "baseIndex": 21.2,
+      "baseIndex": 14.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "irwolsan": {
-      "baseIndex": 21.2,
+      "baseIndex": 14.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 525
     },
     "danseoksan": {
-      "baseIndex": 21.3,
+      "baseIndex": 14.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "poseongbong": {
-      "baseIndex": 21.4,
+      "baseIndex": 14.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 450
     },
     "unmusan": {
-      "baseIndex": 21.5,
+      "baseIndex": 14.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 390
     },
     "seongamsan": {
-      "baseIndex": 21.5,
+      "baseIndex": 14.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "oknyeobong": {
-      "baseIndex": 21.6,
+      "baseIndex": 14.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "bohyeonsan": {
-      "baseIndex": 21.7,
+      "baseIndex": 14.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "bongraesan": {
-      "baseIndex": 21.8,
+      "baseIndex": 14.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "jeongjoksan": {
-      "baseIndex": 21.9,
+      "baseIndex": 14.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 495
     },
     "samjeongsan": {
-      "baseIndex": 21.9,
+      "baseIndex": 14.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "hyeongjebong": {
-      "baseIndex": 22.0,
+      "baseIndex": 14.7,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "jeonggaksan": {
-      "baseIndex": 22.1,
+      "baseIndex": 14.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 435
     },
     "galmibong": {
-      "baseIndex": 22.2,
+      "baseIndex": 14.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 465
     },
     "homyeongsan": {
-      "baseIndex": 22.2,
+      "baseIndex": 14.8,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "hwanseongsan": {
-      "baseIndex": 22.3,
+      "baseIndex": 14.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "hyangrosan": {
-      "baseIndex": 22.4,
+      "baseIndex": 14.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "yeomsubong": {
-      "baseIndex": 22.5,
+      "baseIndex": 15.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "eundubong": {
-      "baseIndex": 22.5,
+      "baseIndex": 15.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "cheongryongsan": {
-      "baseIndex": 22.6,
+      "baseIndex": 15.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 390
     },
     "daeunsan": {
-      "baseIndex": 22.7,
+      "baseIndex": 15.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "amisan": {
-      "baseIndex": 22.8,
+      "baseIndex": 15.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "cheongoksan": {
-      "baseIndex": 22.8,
+      "baseIndex": 15.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "togoksan": {
-      "baseIndex": 22.9,
+      "baseIndex": 15.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "jangsan": {
-      "baseIndex": 23.0,
+      "baseIndex": 15.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "gudeoksan": {
-      "baseIndex": 23.1,
+      "baseIndex": 15.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "sanseongsan": {
-      "baseIndex": 23.1,
+      "baseIndex": 15.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "undalsan": {
-      "baseIndex": 23.2,
+      "baseIndex": 15.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 465
     },
     "gureumsan": {
-      "baseIndex": 23.3,
+      "baseIndex": 15.5,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "ungseokbong": {
-      "baseIndex": 23.4,
+      "baseIndex": 15.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "geomangsan": {
-      "baseIndex": 23.5,
+      "baseIndex": 15.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 405
     },
     "bomunsan": {
-      "baseIndex": 23.5,
+      "baseIndex": 15.7,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "daemosan": {
-      "baseIndex": 23.6,
+      "baseIndex": 15.7,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "yangjasan": {
-      "baseIndex": 23.7,
+      "baseIndex": 15.8,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 375
     },
     "munboksan": {
-      "baseIndex": 23.8,
+      "baseIndex": 15.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "hwangryeongsan": {
-      "baseIndex": 23.8,
+      "baseIndex": 15.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "cheolmasan": {
-      "baseIndex": 23.9,
+      "baseIndex": 15.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "munhaksan": {
-      "baseIndex": 24.0,
+      "baseIndex": 16.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "cheonbosan": {
-      "baseIndex": 24.1,
+      "baseIndex": 16.0,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "sineosan": {
-      "baseIndex": 24.1,
+      "baseIndex": 16.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "baegunsan": {
-      "baseIndex": 24.2,
+      "baseIndex": 16.1,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "sambongsan": {
-      "baseIndex": 24.3,
+      "baseIndex": 16.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "gyejoksan": {
-      "baseIndex": 24.4,
+      "baseIndex": 16.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "ungsan": {
-      "baseIndex": 24.4,
+      "baseIndex": 16.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "seokseongsan": {
-      "baseIndex": 24.5,
+      "baseIndex": 16.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "bukbaesan": {
-      "baseIndex": 24.6,
+      "baseIndex": 16.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "munsusan": {
-      "baseIndex": 24.7,
+      "baseIndex": 16.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "choejeongsan": {
-      "baseIndex": 24.8,
+      "baseIndex": 16.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 240
     },
     "gwangdeoksan": {
-      "baseIndex": 24.8,
+      "baseIndex": 16.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "bongdusan": {
-      "baseIndex": 24.9,
+      "baseIndex": 16.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "seorisan": {
-      "baseIndex": 25.0,
+      "baseIndex": 16.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 345
     },
     "daebongsan": {
-      "baseIndex": 25.1,
+      "baseIndex": 16.7,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "mugapsan": {
-      "baseIndex": 25.1,
+      "baseIndex": 16.8,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "jeonggwangsan": {
-      "baseIndex": 25.2,
+      "baseIndex": 16.8,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "gyeyangsan": {
-      "baseIndex": 25.3,
+      "baseIndex": 16.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "yeongchuksan": {
-      "baseIndex": 25.4,
+      "baseIndex": 16.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "jugeumsan": {
-      "baseIndex": 25.4,
+      "baseIndex": 17.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 405
     },
     "guryongsan": {
-      "baseIndex": 25.5,
+      "baseIndex": 17.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "baekmasan": {
-      "baseIndex": 25.6,
+      "baseIndex": 17.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "baegyangsan": {
-      "baseIndex": 25.7,
+      "baseIndex": 17.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "geumwonsan": {
-      "baseIndex": 25.7,
+      "baseIndex": 17.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "yongamsan": {
-      "baseIndex": 25.8,
+      "baseIndex": 17.2,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "bongsan": {
-      "baseIndex": 25.9,
+      "baseIndex": 17.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "hoamsan": {
-      "baseIndex": 26.0,
+      "baseIndex": 17.3,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "geomunsan": {
-      "baseIndex": 26.1,
+      "baseIndex": 17.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "gibaeksan": {
-      "baseIndex": 26.1,
+      "baseIndex": 17.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "yeoninsan": {
-      "baseIndex": 26.2,
+      "baseIndex": 17.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "maebongsan": {
-      "baseIndex": 26.3,
+      "baseIndex": 17.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "sapaesan": {
-      "baseIndex": 26.4,
+      "baseIndex": 17.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "surisan": {
-      "baseIndex": 26.4,
+      "baseIndex": 17.6,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "yebongsan": {
-      "baseIndex": 26.5,
+      "baseIndex": 17.7,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "beophwasan": {
-      "baseIndex": 26.6,
+      "baseIndex": 17.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "samseongsan": {
-      "baseIndex": 26.7,
+      "baseIndex": 17.8,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "ansan": {
-      "baseIndex": 26.7,
+      "baseIndex": 17.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "gwanggyosan": {
-      "baseIndex": 26.8,
+      "baseIndex": 17.9,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "gitdaebong": {
-      "baseIndex": 26.9,
+      "baseIndex": 17.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "seonginbong": {
-      "baseIndex": 27.0,
+      "baseIndex": 18.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "anyangsan": {
-      "baseIndex": 27.0,
+      "baseIndex": 18.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "jirisantongyeong": {
-      "baseIndex": 27.1,
+      "baseIndex": 18.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "palbongsan": {
-      "baseIndex": 27.2,
+      "baseIndex": 18.1,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 75
     },
     "hwangjangsan": {
-      "baseIndex": 27.3,
+      "baseIndex": 18.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "garisan": {
-      "baseIndex": 27.3,
+      "baseIndex": 18.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "seonunsan": {
-      "baseIndex": 27.4,
+      "baseIndex": 18.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "paryeongsan": {
-      "baseIndex": 27.5,
+      "baseIndex": 18.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "yeonhwasan": {
-      "baseIndex": 27.6,
+      "baseIndex": 18.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "duryunsan": {
-      "baseIndex": 27.7,
+      "baseIndex": 18.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "daedunsan": {
-      "baseIndex": 27.7,
+      "baseIndex": 18.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "deoksungsan": {
-      "baseIndex": 27.8,
+      "baseIndex": 18.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "baegunsanjeongseon": {
-      "baseIndex": 27.9,
+      "baseIndex": 18.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "cheontaesan": {
-      "baseIndex": 28.0,
+      "baseIndex": 18.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "bangjangsan": {
-      "baseIndex": 28.0,
+      "baseIndex": 18.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 135
     },
     "cheongryangsan": {
-      "baseIndex": 28.1,
+      "baseIndex": 18.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "mireuksan": {
-      "baseIndex": 28.2,
+      "baseIndex": 18.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "gangcheonsan": {
-      "baseIndex": 28.3,
+      "baseIndex": 18.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 525
     },
     "doraksan": {
-      "baseIndex": 28.3,
+      "baseIndex": 18.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "obongsan": {
-      "baseIndex": 28.4,
+      "baseIndex": 18.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "chilgapsan": {
-      "baseIndex": 28.5,
+      "baseIndex": 19.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "chuwolsan": {
-      "baseIndex": 28.6,
+      "baseIndex": 19.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "cheongwansan": {
-      "baseIndex": 28.6,
+      "baseIndex": 19.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "eungbongsan": {
-      "baseIndex": 28.7,
+      "baseIndex": 19.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 495
     },
     "maisan": {
-      "baseIndex": 28.8,
+      "baseIndex": 19.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "geumsusan": {
-      "baseIndex": 28.9,
+      "baseIndex": 19.3,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "huiyangsan": {
-      "baseIndex": 29.0,
+      "baseIndex": 19.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "deokhangsan": {
-      "baseIndex": 29.0,
+      "baseIndex": 19.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "daeyasan": {
-      "baseIndex": 29.1,
+      "baseIndex": 19.4,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "jogyesan": {
-      "baseIndex": 29.2,
+      "baseIndex": 19.5,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "hwangaksan": {
-      "baseIndex": 29.3,
+      "baseIndex": 19.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 150
     },
     "taehwasan": {
-      "baseIndex": 29.3,
+      "baseIndex": 19.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "samaksan": {
-      "baseIndex": 29.4,
+      "baseIndex": 19.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "baegunsanpocheon": {
-      "baseIndex": 29.5,
+      "baseIndex": 19.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 495
     },
     "naeyeonsan": {
-      "baseIndex": 29.6,
+      "baseIndex": 19.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "gongjaksan": {
-      "baseIndex": 29.6,
+      "baseIndex": 19.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "jeoksangsan": {
-      "baseIndex": 29.7,
+      "baseIndex": 19.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 345
     },
     "hwawangsan": {
-      "baseIndex": 29.8,
+      "baseIndex": 19.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 300
     },
     "moaksan": {
-      "baseIndex": 29.9,
+      "baseIndex": 19.9,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "daeamsan": {
-      "baseIndex": 29.9,
+      "baseIndex": 20.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "myeongseongsan": {
-      "baseIndex": 30.0,
+      "baseIndex": 20.0,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "muhaksan": {
-      "baseIndex": 30.1,
+      "baseIndex": 20.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "geumosan": {
-      "baseIndex": 30.2,
+      "baseIndex": 20.1,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 165
     },
     "unaksan": {
-      "baseIndex": 30.3,
+      "baseIndex": 20.2,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "baekdeoksan": {
-      "baseIndex": 30.3,
+      "baseIndex": 20.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 390
     },
     "chukryeongsan": {
-      "baseIndex": 30.4,
+      "baseIndex": 20.3,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "unjangsan": {
-      "baseIndex": 30.5,
+      "baseIndex": 20.3,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 450
     },
     "jangansan": {
-      "baseIndex": 30.6,
+      "baseIndex": 20.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "gamaksan": {
-      "baseIndex": 30.6,
+      "baseIndex": 20.4,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 345
     },
     "soyosan": {
-      "baseIndex": 30.7,
+      "baseIndex": 20.5,
       "hourCurve": "urban",
       "monthProfile": "urban",
       "confidence": "low",
       "typicalDurationMin": 345
     },
     "hwangmaesan": {
-      "baseIndex": 30.8,
+      "baseIndex": 20.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 405
     },
     "seodaesan": {
-      "baseIndex": 30.9,
+      "baseIndex": 20.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "yonghwasan": {
-      "baseIndex": 30.9,
+      "baseIndex": 20.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 420
     },
     "baegunsangwangyang": {
-      "baseIndex": 31.0,
+      "baseIndex": 20.7,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 360
     },
     "yumyeongsan": {
-      "baseIndex": 31.1,
+      "baseIndex": 20.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 180
     },
     "dutasan": {
-      "baseIndex": 31.2,
+      "baseIndex": 20.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "byeonsan": {
-      "baseIndex": 31.2,
+      "baseIndex": 20.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "biseulsan": {
-      "baseIndex": 31.3,
+      "baseIndex": 20.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "minjujisan": {
-      "baseIndex": 31.4,
+      "baseIndex": 20.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 105
     },
     "hwangseoksan": {
-      "baseIndex": 31.5,
+      "baseIndex": 21.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 450
     },
     "yongmunsan": {
-      "baseIndex": 31.5,
+      "baseIndex": 21.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 390
     },
     "gariwangsan": {
-      "baseIndex": 31.6,
+      "baseIndex": 21.1,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 420
     },
     "geumsan": {
-      "baseIndex": 31.7,
+      "baseIndex": 21.1,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "myeongjisan": {
-      "baseIndex": 31.8,
+      "baseIndex": 21.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 315
     },
     "namsan": {
-      "baseIndex": 31.9,
+      "baseIndex": 21.2,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 210
     },
     "wolchulsan": {
-      "baseIndex": 31.9,
+      "baseIndex": 21.3,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 285
     },
     "bangtaesan": {
-      "baseIndex": 32.0,
+      "baseIndex": 21.3,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "unmunsan": {
-      "baseIndex": 32.1,
+      "baseIndex": 21.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 120
     },
     "jaeyaksan": {
-      "baseIndex": 32.2,
+      "baseIndex": 21.4,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 420
     },
     "gajisan": {
-      "baseIndex": 32.2,
+      "baseIndex": 21.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "sinbulsan": {
-      "baseIndex": 32.3,
+      "baseIndex": 21.5,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 195
     },
     "baegamsan": {
-      "baseIndex": 32.4,
+      "baseIndex": 21.6,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 270
     },
     "cheonseongsan": {
-      "baseIndex": 32.5,
+      "baseIndex": 21.6,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 540
     },
     "geumjeongsan": {
-      "baseIndex": 32.5,
+      "baseIndex": 21.7,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 330
     },
     "hwaaksan": {
-      "baseIndex": 32.6,
+      "baseIndex": 21.7,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 465
     },
     "cheonmasan": {
-      "baseIndex": 32.7,
+      "baseIndex": 21.8,
       "hourCurve": "alpine",
       "monthProfile": "default",
       "confidence": "low",
       "typicalDurationMin": 225
     },
     "gubyeongsan": {
-      "baseIndex": 32.8,
+      "baseIndex": 21.8,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 60
     },
     "juheulsan": {
-      "baseIndex": 32.8,
+      "baseIndex": 21.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 90
     },
     "jeombongsan": {
-      "baseIndex": 32.9,
+      "baseIndex": 21.9,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
       "typicalDurationMin": 255
     },
     "gyebangsan": {
-      "baseIndex": 33.0,
+      "baseIndex": 22.0,
       "hourCurve": "alpine",
       "monthProfile": "autumnLeaf",
       "confidence": "low",
