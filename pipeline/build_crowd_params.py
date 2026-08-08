@@ -172,6 +172,8 @@ def check_distribution(model: dict, mountains: list[dict]) -> bool:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--refresh", action="store_true",
+                    help="기존 추정치(confidence low)를 버리고 다시 계산한다. 손입력은 유지")
     args = ap.parse_args()
 
     catalog = json.loads(MOUNTAINS.read_text())
@@ -186,10 +188,23 @@ def main() -> int:
         t = find_for(m["name"], m["lat"], m["lon"], trails)
         total_km[m["id"]] = t["totalKm"] if t else 0.0
 
+    # 추정치(confidence low)는 마스터가 바뀌면 서열도 바뀌므로 매번 다시 계산한다.
+    # 손입력(high/medium)은 절대 건드리지 않는다.
+    if args.refresh:
+        dropped = [k for k, v in known.items() if v.get("confidence") == "low"]
+        for k in dropped:
+            del known[k]
+        print(f"기존 추정치 {len(dropped)}개를 버리고 다시 계산합니다.")
+
+    # 마스터에서 빠진 산의 파라미터는 남겨 둘 이유가 없다.
+    for k in [k for k in known if k not in {m["id"] for m in mountains}]:
+        if known[k].get("confidence") == "low":
+            del known[k]
+
     train = [m for m in mountains if m["id"] in known]
     todo = [m for m in mountains if m["id"] not in known]
     if not todo:
-        print("이미 전부 채워져 있습니다.")
+        print("이미 전부 채워져 있습니다. (추정치를 다시 계산하려면 --refresh)")
         return 0
 
     # ── 합성 점수로 서열을 매기고, 백분위를 baseIndex 구간에 늘어놓는다.

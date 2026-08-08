@@ -1,0 +1,341 @@
+{
+ "source": "make_seed.py 의 손입력 SEED (앱 번들 Resources/mountains.json)",
+ "note": "편집된 코스다. 등산로 원본 라우팅보다 정확하므로 build_mountains 가 1순위로 쓴다.",
+ "courses": {
+  "북한산": [
+   {
+    "name": "우이동~백운대",
+    "distanceKm": 4.7,
+    "durationMin": 180,
+    "difficulty": 4,
+    "ascentM": null
+   },
+   {
+    "name": "북한산성~대남문",
+    "distanceKm": 5.2,
+    "durationMin": 165,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "도봉산": [
+   {
+    "name": "도봉탐방지원센터~자운봉",
+    "distanceKm": 4.0,
+    "durationMin": 165,
+    "difficulty": 4,
+    "ascentM": null
+   }
+  ],
+  "관악산": [
+   {
+    "name": "서울대입구~연주대",
+    "distanceKm": 4.2,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "과천향교~연주대",
+    "distanceKm": 3.4,
+    "durationMin": 135,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "청계산": [
+   {
+    "name": "원터골~매봉",
+    "distanceKm": 3.2,
+    "durationMin": 100,
+    "difficulty": 2,
+    "ascentM": null
+   }
+  ],
+  "수락산": [
+   {
+    "name": "수락산역~주봉",
+    "distanceKm": 3.8,
+    "durationMin": 140,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "인왕산": [
+   {
+    "name": "사직공원~정상",
+    "distanceKm": 2.0,
+    "durationMin": 60,
+    "difficulty": 1,
+    "ascentM": null
+   }
+  ],
+  "설악산": [
+   {
+    "name": "오색~대청봉",
+    "distanceKm": 5.0,
+    "durationMin": 240,
+    "difficulty": 5,
+    "ascentM": null
+   },
+   {
+    "name": "한계령~대청봉",
+    "distanceKm": 8.0,
+    "durationMin": 330,
+    "difficulty": 5,
+    "ascentM": null
+   },
+   {
+    "name": "소공원~비선대",
+    "distanceKm": 3.0,
+    "durationMin": 70,
+    "difficulty": 2,
+    "ascentM": null
+   }
+  ],
+  "지리산": [
+   {
+    "name": "중산리~천왕봉",
+    "distanceKm": 5.4,
+    "durationMin": 270,
+    "difficulty": 5,
+    "ascentM": null
+   },
+   {
+    "name": "성삼재~노고단",
+    "distanceKm": 2.6,
+    "durationMin": 60,
+    "difficulty": 1,
+    "ascentM": null
+   }
+  ],
+  "한라산": [
+   {
+    "name": "성판악~백록담",
+    "distanceKm": 9.6,
+    "durationMin": 300,
+    "difficulty": 4,
+    "ascentM": null
+   },
+   {
+    "name": "영실~윗세오름",
+    "distanceKm": 5.8,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "덕유산": [
+   {
+    "name": "곤돌라~향적봉",
+    "distanceKm": 2.0,
+    "durationMin": 60,
+    "difficulty": 2,
+    "ascentM": null
+   },
+   {
+    "name": "삼공리~향적봉",
+    "distanceKm": 8.5,
+    "durationMin": 270,
+    "difficulty": 4,
+    "ascentM": null
+   }
+  ],
+  "소백산": [
+   {
+    "name": "삼가리~비로봉",
+    "distanceKm": 5.7,
+    "durationMin": 210,
+    "difficulty": 4,
+    "ascentM": null
+   },
+   {
+    "name": "희방사~연화봉",
+    "distanceKm": 3.2,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "오대산": [
+   {
+    "name": "상원사~비로봉",
+    "distanceKm": 3.5,
+    "durationMin": 120,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "월정사 전나무숲길",
+    "distanceKm": 1.9,
+    "durationMin": 40,
+    "difficulty": 1,
+    "ascentM": null
+   }
+  ],
+  "치악산": [
+   {
+    "name": "구룡사~비로봉",
+    "distanceKm": 5.6,
+    "durationMin": 210,
+    "difficulty": 4,
+    "ascentM": null
+   }
+  ],
+  "태백산": [
+   {
+    "name": "유일사~장군봉",
+    "distanceKm": 4.0,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "당골~천제단",
+    "distanceKm": 4.4,
+    "durationMin": 165,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "속리산": [
+   {
+    "name": "법주사~문장대",
+    "distanceKm": 6.0,
+    "durationMin": 210,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "계룡산": [
+   {
+    "name": "동학사~관음봉",
+    "distanceKm": 4.0,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "갑사~금잔디고개",
+    "distanceKm": 3.5,
+    "durationMin": 120,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "내장산": [
+   {
+    "name": "내장사~신선봉",
+    "distanceKm": 5.0,
+    "durationMin": 180,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "케이블카~전망대",
+    "distanceKm": 0.6,
+    "durationMin": 20,
+    "difficulty": 1,
+    "ascentM": null
+   }
+  ],
+  "무등산": [
+   {
+    "name": "증심사~서석대",
+    "distanceKm": 5.5,
+    "durationMin": 180,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "원효사~서석대",
+    "distanceKm": 4.2,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "팔공산": [
+   {
+    "name": "동화사~동봉",
+    "distanceKm": 4.5,
+    "durationMin": 165,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "갓바위 오름",
+    "distanceKm": 1.5,
+    "durationMin": 50,
+    "difficulty": 2,
+    "ascentM": null
+   }
+  ],
+  "월악산": [
+   {
+    "name": "덕주사~영봉",
+    "distanceKm": 6.5,
+    "durationMin": 240,
+    "difficulty": 5,
+    "ascentM": null
+   }
+  ],
+  "가야산": [
+   {
+    "name": "백운동~상왕봉",
+    "distanceKm": 4.5,
+    "durationMin": 180,
+    "difficulty": 4,
+    "ascentM": null
+   },
+   {
+    "name": "해인사~상왕봉",
+    "distanceKm": 4.0,
+    "durationMin": 180,
+    "difficulty": 4,
+    "ascentM": null
+   }
+  ],
+  "주왕산": [
+   {
+    "name": "대전사~용추폭포",
+    "distanceKm": 3.0,
+    "durationMin": 80,
+    "difficulty": 1,
+    "ascentM": null
+   },
+   {
+    "name": "대전사~주봉",
+    "distanceKm": 4.0,
+    "durationMin": 150,
+    "difficulty": 3,
+    "ascentM": null
+   }
+  ],
+  "마니산": [
+   {
+    "name": "정수사~참성단",
+    "distanceKm": 2.9,
+    "durationMin": 100,
+    "difficulty": 3,
+    "ascentM": null
+   },
+   {
+    "name": "단군로",
+    "distanceKm": 2.4,
+    "durationMin": 90,
+    "difficulty": 2,
+    "ascentM": null
+   }
+  ],
+  "불암산": [
+   {
+    "name": "불암산공원~정상",
+    "distanceKm": 2.6,
+    "durationMin": 90,
+    "difficulty": 2,
+    "ascentM": null
+   }
+  ]
+ }
+}

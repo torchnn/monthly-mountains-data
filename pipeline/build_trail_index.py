@@ -10,6 +10,11 @@
 
     python3 pipeline/build_trail_index.py
 
+`routes` 가 진짜 코스다 — 구간을 그래프로 이어 만든 **들머리 → 정상 실경로**.
+이름으로 묶은 `courses` 는 하나의 경로가 아니라 여러 갈래의 합이라 지리산 '중태리구간'
+45km·22시간 같은 게 나온다. 정상 앵커를 못 구한 산에서만 그쪽으로 폴백한다.
+앵커는 지점 레이어의 '정상'(원본의 29%)이나 마스터 좌표(`--summits`)에서 온다.
+
 ⚠️ **누적상승고도(`ascentM`)는 이 원본으로 채울 수 없다.**
    GPX 에 `<ele>` 가 있지만 값이 전부 0 이다(표본 40개 산 263,509개 트랙포인트 전수 0).
    SHP/esri json 쪽에도 고도 필드가 없다. 앱 모델의 `Course.ascentM` 이 옵셔널이라
@@ -43,6 +48,15 @@ DIFFICULTY = {"쉬움": 2, "중간": 3, "보통": 3, "어려움": 4}
 # 들머리로 쓸 지점 종류. '정상'은 별도로 뽑아 산 대표 좌표에 쓴다.
 TRAILHEAD_KINDS = {"시종점"}
 
+# 원본 `PMNTN_UPPL`(상행 소요시간)을 실제 등산 시간으로 되돌리는 계수. **측정값이다.**
+#
+# 원본대로 이어붙이면 어느 산이든 3.38~3.43km/h 라는 거의 일정한 속도가 나온다 —
+# 실측이 아니라 거리에 상수를 곱한 값이라는 뜻이고, 3.4km/h 는 평지 보행 속도다.
+# 손으로 적은 코스 11개(북한산성~대남문 5.2km/165분 = 1.89km/h, 도봉탐방지원센터~자운봉
+# 4.0km/165분 = 1.45km/h …)와 대조하니 라우팅이 **중앙 1.98배 빠르게** 나왔다.
+# 그래서 2.0 을 곱해 1.7km/h 대로 낮춘다. 보정 전에는 관악산 정상까지 44분으로 나왔다.
+DURATION_CALIBRATION = 1.98
+
 
 def members(path: Path) -> dict[str, bytes]:
     """zip 내부 이름이 CP949 라 그대로 읽으면 깨진다."""
@@ -72,8 +86,135 @@ def _wgs(x, y) -> tuple[float, float] | None:
     return round(lat, PRECISION), round(lon, PRECISION)
 
 
-def parse_mountain(archive: Path) -> dict | None:
-    """아카이브 하나(= 산 하나) → 요약 딕셔너리."""
+def _node(x: float, y: float) -> tuple[int, int]:
+    """투영좌표(m)를 0.1m 격자로 스냅해 그래프 노드로 삼는다.
+    원본이 위상적으로 정리돼 있어 구간 끝점이 이 정밀도에서 정확히 겹친다
+    (북한산 296개 구간 → 노드 246개, 그중 186개가 2개 이상 구간이 만나는 교차점)."""
+    return (round(x * 10), round(y * 10))
+
+
+def _routes(feats: list[dict], summit: tuple[float, float] | None,
+            heads: list[tuple[str, float, float]]) -> list[dict]:
+    """구간을 그래프로 이어 **들머리 → 정상** 최단시간 경로를 뽑는다.
+    `summit` 과 `heads` 의 좌표는 WGS84(위도, 경도)다.
+
+    이름으로 묶는 방식(`courses`)은 하나의 경로가 아니라 여러 갈래의 합이라
+    지리산 '중태리구간' 45km·22시간 같은 게 나온다. 여기서는 실제로 이어붙인
+    길이라 사람이 하루에 걷는 단위가 된다.
+
+    ⚠️ 정상 앵커를 원본에서 못 구하는 산이 대부분이다 — 지점 레이어에 '정상'이 있는 산은
+       29%뿐이고, 북한산조차 분기점·시종점만 있다. 그래서 호출부가 마스터
+       (`data/v1/mountains.json`)의 산 좌표를 앵커로 넘길 수 있게 열어 뒀다.
+       앵커가 없으면 빈 목록을 주고, 호출부는 이름 묶음으로 폴백한다.
+    """
+    if not summit or not heads:
+        return []
+
+    # ── 간선: 구간 하나 = 양끝 노드를 잇는 무향 간선
+    graph: dict[tuple, list[tuple[tuple, float, float]]] = defaultdict(list)
+    nodes: list[tuple[tuple, float, float]] = []
+    seen_nodes: set[tuple] = set()
+    for f in feats:
+        a = f["attributes"]
+        try:
+            km = float(a.get("PMNTN_LT") or 0)
+            minutes = float(a.get("PMNTN_UPPL") or 0)
+        except (TypeError, ValueError):
+            continue
+        for path in f["geometry"].get("paths") or []:
+            if len(path) < 2:
+                continue
+            try:
+                sx, sy = float(path[0][0]), float(path[0][1])
+                ex, ey = float(path[-1][0]), float(path[-1][1])
+            except (TypeError, ValueError):
+                continue
+            u, v = _node(sx, sy), _node(ex, ey)
+            if u == v:
+                continue
+            # 소요시간이 비어 있으면 거리로 어림한다(등산 평균 20분/km).
+            cost = minutes if minutes > 0 else km * 20
+            graph[u].append((v, cost, km))
+            graph[v].append((u, cost, km))
+            for key, px, py in ((u, sx, sy), (v, ex, ey)):
+                if key not in seen_nodes:
+                    seen_nodes.add(key)
+                    plat, plon = to_wgs84(px, py, KOREA_CENTRAL)
+                    nodes.append((key, plat, plon))
+    if not graph:
+        return []
+
+    def nearest(lat: float, lon: float, max_m: float) -> tuple | None:
+        best, bd = None, float("inf")
+        for key, nlat, nlon in nodes:
+            d = haversine_m(lat, lon, nlat, nlon)
+            if d < bd:
+                best, bd = key, d
+        return best if bd <= max_m else None
+
+    # 정상 앵커는 마스터 좌표일 수 있어 등산로에서 조금 떨어져 있다 — 1km 까지 허용한다.
+    top = nearest(summit[0], summit[1], 1000)
+    if top is None:
+        return []
+
+    # ── 정상에서 한 번만 다익스트라를 돌리면 모든 들머리까지의 비용이 나온다
+    import heapq
+
+    dist: dict[tuple, tuple[float, float]] = {top: (0.0, 0.0)}
+    pq = [(0.0, 0.0, top)]
+    while pq:
+        cost, km, u = heapq.heappop(pq)
+        if cost > dist.get(u, (float("inf"), 0))[0]:
+            continue
+        for v, w, wk in graph[u]:
+            nc, nk = cost + w, km + wk
+            if nc < dist.get(v, (float("inf"), 0))[0]:
+                dist[v] = (nc, nk)
+                heapq.heappush(pq, (nc, nk, v))
+
+    routes = []
+    for label, hlat, hlon in heads:
+        key = nearest(hlat, hlon, 200)              # 들머리는 등산로 위에 찍혀 있다
+        if key is None or key not in dist:
+            continue                                # 정상과 이어지지 않는 들머리
+        minutes, km = dist[key]
+        minutes *= DURATION_CALIBRATION      # 원본 상행 시간은 평지 보행 속도다 — 위 주석 참고
+        if not (0 < km <= 25 and 0 < minutes <= 600):
+            continue
+        routes.append({
+            "label": label,
+            "distanceKm": round(km, 2),
+            "durationMin": int(round(minutes)),
+            "difficulty": None,
+            "ascentM": None,
+        })
+
+    routes.sort(key=lambda r: r["durationMin"])
+    # 같은 노드로 스냅된 들머리는 결과가 같다 — 거리·시간이 겹치면 하나만 남긴다.
+    unique, seen_rt = [], set()
+    for r in routes:
+        sig = (r["distanceKm"], r["durationMin"])
+        if sig in seen_rt:
+            continue
+        seen_rt.add(sig)
+        unique.append(r)
+    unique = unique[:8]
+
+    # 이름 짓기. 원본의 `DETAIL_SPO` 가 대부분 '시종점' 이라 그대로 쓰면 전부 같은 이름이 되고,
+    # 앱의 `Course.id` 가 name 이라 ForEach 에서 충돌한다. 뜻이 없는 라벨이면 번호를 매긴다.
+    for i, r in enumerate(unique, 1):
+        label = r.pop("label")
+        generic = (not label) or label in ("시종점", "분기점", "기타")
+        r["name"] = f"들머리 {i}~정상" if generic else f"{label}~정상"
+    return unique
+
+
+def parse_mountain(archive: Path, summits=None) -> dict | None:
+    """아카이브 하나(= 산 하나) → 요약 딕셔너리.
+
+    `summits` 는 `(lat, lon) -> (lat, lon) | None` 콜러블. 등산로 원본에 '정상' 지점이
+    없는 산에 마스터의 산 좌표를 정상 앵커로 공급한다.
+    """
     try:
         files = members(archive)
     except zipfile.BadZipFile:
@@ -130,7 +271,8 @@ def parse_mountain(archive: Path) -> dict | None:
     courses.sort(key=lambda c: -c["distanceKm"])
 
     # ── 지점 레이어에서 들머리와 정상 ────────────────────────────────
-    trailheads, summit = [], None
+    # 라우팅은 투영좌표에서 하므로(구간 기하와 같은 계로 맞춰야 한다) 원좌표도 함께 들고 간다.
+    trailheads, summit, head_xy = [], None, []
     if spot_raw:
         seen = set()
         for f in json.loads(spot_raw.decode("utf-8", "replace")).get("features", []):
@@ -149,7 +291,9 @@ def parse_mountain(archive: Path) -> dict | None:
                 if key in seen:
                     continue
                 seen.add(key)
-                trailheads.append({"label": str(a.get("DETAIL_SPO") or kind).strip(), "lat": lat, "lon": lon})
+                label = str(a.get("DETAIL_SPO") or kind).strip()
+                trailheads.append({"label": label, "lat": lat, "lon": lon})
+                head_xy.append((label, lat, lon))
 
     # 대표 좌표: 정상 > 들머리 평균 > 첫 구간 시작점
     if summit:
@@ -169,6 +313,11 @@ def parse_mountain(archive: Path) -> dict | None:
             return None
         lat, lon = point
 
+    # 정상 앵커: 지점 레이어의 '정상' > 마스터가 알려 준 좌표.
+    # 원본에 정상이 있는 산은 29%뿐이라(북한산조차 없다) 마스터 쪽이 실질적인 공급원이다.
+    anchor = summit or (summits(lat, lon) if summits else None)
+    routes = _routes(feats, anchor, head_xy) if anchor else []
+
     return {
         "code": code,
         "name": name,
@@ -180,12 +329,38 @@ def parse_mountain(archive: Path) -> dict | None:
         "totalMin": sum(c["durationMin"] for c in courses) + unnamed["min"],
         # 이름 없는 구간이 35% 라 코스 목록에는 못 넣지만 총계에서 빼면 거리가 줄어 보인다.
         "unnamedKm": round(unnamed["km"], 2),
+        # `routes` 가 진짜 코스다(들머리→정상 실경로). 정상 지점이 없어 라우팅을 못 한
+        # 산에서만 `courses`(이름 묶음)로 폴백한다 — 파일 상단 주석 참고.
+        "routes": routes,
         "courses": courses,
         "trailheads": trailheads,
     }
 
 
-def build(limit: int | None = None) -> dict:
+def _summit_lookup(path: Path):
+    """마스터의 산 좌표를 정상 앵커로 쓰는 콜러블을 만든다.
+
+    등산로 원본의 대표 좌표에서 5km 안에 있는 마스터 산의 좌표를 돌려준다.
+    마스터 좌표는 100대명산 API 가 준 산 대표점(≈정상)이라 앵커로 쓸 만하다.
+    """
+    if not path.exists():
+        return None
+    master = json.loads(path.read_text())["mountains"]
+    pts = [(m["lat"], m["lon"]) for m in master]
+
+    def lookup(lat: float, lon: float):
+        best, bd = None, float("inf")
+        for mlat, mlon in pts:
+            d = haversine_m(lat, lon, mlat, mlon)
+            if d < bd:
+                best, bd = (mlat, mlon), d
+        return best if bd <= 5000 else None
+
+    print(f"  정상 앵커: 마스터 {len(pts)}개 산 좌표 사용")
+    return lookup
+
+
+def build(limit: int | None = None, summits_path: Path | None = None) -> dict:
     if not SRC.exists():
         sys.exit(f"원본 없음: {SRC}\nmountain.zip 을 data/raw/trails 로 풀어 두세요.")
 
@@ -195,9 +370,11 @@ def build(limit: int | None = None) -> dict:
     if not archives:
         sys.exit(f"{SRC} 에 *_geojson.zip 이 없습니다.")
 
+    summits = _summit_lookup(summits_path) if summits_path else None
+
     mountains, skipped = [], 0
     for i, arc in enumerate(archives, 1):
-        m = parse_mountain(arc)
+        m = parse_mountain(arc, summits)
         if m:
             mountains.append(m)
         else:
@@ -286,6 +463,8 @@ def main() -> int:
     ap.add_argument("--limit", type=int, help="앞에서 N개 산만 (시험용)")
     ap.add_argument("--dry-run", action="store_true", help="요약만 출력하고 파일은 쓰지 않는다")
     ap.add_argument("--match", action="store_true", help="이미 만든 trails.json 으로 시드 매칭률만 확인")
+    ap.add_argument("--summits", type=Path, default=ROOT / "data" / "v1" / "mountains.json",
+                    help="정상 앵커로 쓸 마스터 파일 (없으면 라우팅은 '정상' 지점이 있는 산만)")
     args = ap.parse_args()
 
     if args.match:
@@ -293,7 +472,7 @@ def main() -> int:
             sys.exit(f"{OUT} 가 없습니다 — 먼저 인자 없이 한 번 돌리세요.")
         return report_match(json.loads(OUT.read_text()))
 
-    index = build(args.limit)
+    index = build(args.limit, args.summits)
     summarize(index)
     if args.dry_run:
         return 0

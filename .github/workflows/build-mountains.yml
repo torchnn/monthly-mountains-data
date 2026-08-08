@@ -13,10 +13,8 @@ name: build-mountains
 # 앱에서 전부 같은 폴백 값(baseIndex 45)을 쓰게 되어 혼잡도 정렬이 무의미해진다.
 
 on:
-  # ⏸ 크론 정지 — 켜면 매월 마스터가 자동 갱신·커밋된다.
-  #    스크립트는 갖춰졌으니(2026-08-08) 아래 두 줄의 주석만 되돌리면 된다.
-  # schedule:
-  # - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
+  schedule:
+    - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
   workflow_dispatch:
     inputs:
       limit:
@@ -33,7 +31,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 산 300개 × 관광공사 사진 조회. 사진이 없는 산은 유형을 푼 2차 검색까지 가므로
+    # 호출이 배로 늘어난다 — 실측 40분대. 여유를 두되 행(hang)은 잡히게 둔다.
+    timeout-minutes: 75
 
     steps:
       - uses: actions/checkout@v4
@@ -60,7 +60,9 @@ jobs:
       - name: 혼잡도 산별 파라미터 확장
         # 새로 들어온 산은 앱에서 폴백(baseIndex 45)으로 전부 같아진다 — 여기서 채운다.
         # 5단계가 한쪽으로 쏠리면 종료 코드 1 이라 커밋되지 않는다.
-        run: python pipeline/build_crowd_params.py
+        # --refresh: 마스터가 바뀌면 서열도 바뀌므로 추정치를 다시 계산한다.
+        #            손입력(confidence high/medium)은 건드리지 않는다.
+        run: python pipeline/build_crowd_params.py --refresh
 
       - name: 혼잡도 모델 검증
         run: python pipeline/validate.py data/v1/crowd_model.json

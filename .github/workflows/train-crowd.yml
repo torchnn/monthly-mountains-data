@@ -7,16 +7,12 @@ name: train-crowd
 # public 레포는 Actions 분이 무제한이므로 private 예산에서 학습 비용이 빠진다.
 
 on:
-  # ⏸ 크론 정지 — pipeline/fetch_visitor_stats.py 가 아직 없다. 자동 실행하면 매번 실패만 쌓인다.
-  #    갖춰지면 아래 두 줄의 주석을 되돌린다. (README "현재 상태" 참고)
-  # schedule:
-  # - cron: "0 19 * * 0"   # 매주 월요일 04:00 KST
+  schedule:
+    - cron: "0 19 * * 0"   # 매주 월요일 04:00 KST
   workflow_dispatch:
-  # ⏸ 함께 정지 — signals 가 push 해도 학습 스크립트가 없어 실패만 한다.
-  #    fetch_visitor_stats.py 가 생기면 되돌린다.
   # signals 레포가 새 지수를 push 하면 바로 재학습한다.
-  # repository_dispatch:
-  #   types: [signals-updated]
+  repository_dispatch:
+    types: [signals-updated]
 
 permissions:
   contents: write

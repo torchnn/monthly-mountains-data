@@ -22,41 +22,39 @@ torchnn 레포의 **기본값은 private** 이다. 이 레포가 예외인 이�
 네이버 관련 수집은 재배포 제약이 있어 [monthly-mountains-signals](https://github.com/torchnn/monthly-mountains-signals)(private)
 에서 돌고, **파생 산출물만** 이 레포로 push 된다.
 
-## ⚠️ 현재 상태 (2026-08-03) — 자동 갱신은 멈춰 있다
+## 현재 상태 (2026-08-09) — 사슬이 이어졌다
 
-**`data/v1/` 의 데이터는 파이프라인이 만든 것이 아니라 2026-07-27~28 에 손으로 넣은 것이다.**
-앱은 그 데이터로 정상 동작하지만, 아래가 갖춰질 때까지 **자동 갱신은 되지 않는다.**
+인증키를 발급받아 등록했고, 미작성 스크립트도 없다. 자동 갱신이 돈다.
 
-| 필요한 것 | 상태 | 막는 것 |
-|---|---|---|
-| `pipeline/collect_weather.py` | ✅ 있음 | — |
-| `pipeline/train_crowd.py` | ✅ 있음 | — |
-| `pipeline/validate.py` | ✅ 있음 | — |
-| `requirements.txt` | ✅ 있음 | — |
-| `pipeline/fetch_visitor_stats.py` | ❌ **미작성** | 공공데이터포털(국립공원공단 탐방객 API) 응답을 봐야 작성 가능 |
-| `pipeline/build_mountains.py` | ❌ **미작성** | 공공데이터포털(산림청 산정보·100대명산) 〃 |
-| `DATA_GO_KR_KEY` 시크릿 | ❌ 미등록 | 포털 점검 중 (2026-08 기준 로그인 불가) |
+| 스크립트 | 상태 |
+|---|---|
+| `collect_weather.py` | ✅ 날씨·대기질·특보 |
+| `build_mountains.py` | ✅ 산 마스터 300개 |
+| `build_crowd_params.py` | ✅ 산별 혼잡도 파라미터 확장 |
+| `fetch_visitor_stats.py` | ✅ 탐방객 통계 CSV 수신 |
+| `train_crowd.py` · `validate.py` | ✅ |
+| `DATA_GO_KR_KEY` 시크릿 | ✅ 등록 — **디코딩 키**여야 한다 |
 
-끊긴 사슬을 그림으로:
+이어진 사슬:
 ```
-fetch_visitor_stats.py → data/raw/*.csv → train_crowd.py → crowd_fit.json
-     ❌ 없음               ⚠️ gitignore      ✅ 있음
+fetch_visitor_stats.py → data/raw/*.csv  → train_crowd.py       → crowd_fit.json
+build_mountains.py     → mountains.json → build_crowd_params.py → crowd_model.json
 ```
-`data/raw/` 는 원본이 2.4MB 라 의도적으로 gitignore 다. 받아오는 스크립트가 없으니 CI 에는 입력이 없다.
-**키만 등록해도 이 사슬은 이어지지 않는다.**
-
-그래서 세 워크플로의 `schedule:` 은 **주석 처리해 두었다.** 3시간마다 실패해 월 240건의 빨간 X 를
-쌓으면 진짜 고장이 그 속에 묻힌다. `workflow_dispatch` 는 살려 뒀으니 수동 실행은 된다.
-포털이 열리면 위 표의 ❌ 를 채우고 크론 주석을 되돌린다.
+`data/raw/` 는 gitignore 다. 탐방객 CSV 는 로그인이 필요 없어 CI 가 직접 받지만,
+등산로·공원경계 원본은 세션이 필요해 **사람이 받아 로컬에서 변환본을 커밋**한다
+(`pipeline/trails.json` · `pipeline/park_buffer_3km.json`).
 
 ## 워크플로
 
 | 파일 | 주기 | 하는 일 | 상태 |
 |---|---|---|---|
-| `build-mountains.yml` | 월 1회 | 산 마스터 재빌드 | ⏸ 크론 정지 (스크립트 미작성) |
-| `forecast-weather.yml` | 3시간 | 날씨·대기질·특보 → `forecast/<id>.json` | ⏸ 크론 정지 (키 미등록) |
-| `train-crowd.yml` | 주 1회 + dispatch | 혼잡도 모델 학습·검증 | ⏸ 크론 정지 (스크립트 미작성) |
+| `build-mountains.yml` | 매월 1일 03:00 KST | 산 마스터 재빌드 + 혼잡도 파라미터 | ✅ 활성 |
+| `forecast-weather.yml` | 3시간마다 | 날씨·대기질·특보 → `forecast/<id>.json` | ✅ 활성 |
+| `train-crowd.yml` | 매주 월 04:00 KST + dispatch | 혼잡도 모델 학습·검증 | ✅ 활성 |
 | (Pages 자동) | push | `data/v1/` → Pages | ✅ 동작 |
+
+⚠️ 산 300개면 `forecast-weather` 가 회차마다 300개 파일을 커밋한다(회당 0.9MB · 하루 8회).
+레포 증가가 문제되면 예보를 orphan 브랜치로 옮기는 걸 고려할 것.
 
 전 워크플로에 `timeout-minutes` 를 건다. 분 소모 사고의 최대 원인은 평상시 사용량이 아니라
 행(hang)이다 — 기본값 360분짜리 잡 하나가 예산을 통째로 태운다.
@@ -99,7 +97,11 @@ python3 pipeline/make_dev_samples.py   # 형제 디렉터리 ../monthly_mountain
 
 | 이름 | 발급처 |
 |---|---|
-| `DATA_GO_KR_KEY` | [공공데이터포털](https://www.data.go.kr) — 산정보·100대명산·산악예보·단기예보·에어코리아·TourAPI |
+| `DATA_GO_KR_KEY` | [공공데이터포털](https://www.data.go.kr) — 산정보·100대명산·봉우리POI·단기예보·기상특보·에어코리아·TourAPI |
+
+**디코딩 키**를 등록한다. requests 의 params 로 넘기면 라이브러리가 다시 URL 인코딩하므로
+인코딩 키를 넣으면 이중 인코딩으로 인증에 실패한다.
+기상청 산악예보는 포털에 없어 쓰지 않는다(`kmaMountainCode` 는 계속 null, 단기예보 격자로 간다).
 
 public 레포지만 [fork PR 워크플로에는 시크릿이 전달되지 않는다](https://docs.github.com/en/actions/reference/security/secure-use).
 추가로 fork PR 워크플로 승인을 필수로 걸고 `pull_request_target` 은 쓰지 않는다.

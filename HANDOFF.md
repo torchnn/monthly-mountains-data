@@ -54,16 +54,16 @@ https://torchnn.github.io/monthly-mountains-data/data/v1/
 
 | 파일 | 주기 | 상태 |
 |---|---|---|
-| `build-mountains.yml` | 월 1회 | ✅ `build_mountains.py` 작성됨(2026-08-08) |
-| `forecast-weather.yml` | 3시간 | ✅ 실측 동작 확인 |
-| `train-crowd.yml` | 주 1회 | ⚠️ `fetch_visitor_stats.py` 미구현. `train_crowd.py` 는 있음 |
+| `build-mountains.yml` | 매월 1일 03:00 KST | ✅ 크론 활성 |
+| `forecast-weather.yml` | 3시간마다 | ✅ 크론 활성 |
+| `train-crowd.yml` | 매주 월 04:00 KST + signals push | ✅ 크론 활성 |
 | `publish-pages.yml` | push | ❌ 미작성 (지금은 Pages 기본 동작에 의존) |
 
-⚠️ 세 워크플로 모두 `schedule:` 이 주석 처리돼 있다("⏸ 크론 정지").
-`build-mountains` 와 `forecast-weather` 는 이제 되살려도 된다.
+**미구현 스크립트 없음.** 2026-08-09 에 `fetch_visitor_stats.py` 까지 작성해
+`fetch → train_crowd` 체인이 끝까지 돈다(계수가 기존 학습값과 일치하는 것으로 확인).
 
-**미구현 스크립트**: `fetch_visitor_stats.py` 하나뿐.
-(`validate.py` 는 2026-08-03 에 작성됐다 — 이전 표기가 틀렸다.)
+⚠️ 산 300개면 `forecast-weather` 가 회차마다 300개 파일을 커밋한다(회당 0.9MB · 하루 8회).
+레포가 꾸준히 커지므로 커지면 예보를 orphan 브랜치로 옮기는 걸 고려할 것.
 
 ### `build_mountains.py`
 

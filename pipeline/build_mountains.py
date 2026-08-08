@@ -205,26 +205,42 @@ def fetch_photo(name: str, lat: float, lon: float) -> tuple[str | None, str | No
     if stripped and stripped != name:
         queries.append(stripped)
 
+    base = re.sub(r"\(.*?\)", "", name).strip().split("_")[0]
+
+    # 1차: 관광지(12)로 좁혀 검색. 2차: 유형을 풀되 **제목에 산 이름이 들어간 것만**.
+    #
+    # ⚠️ 유형·반경을 그냥 넓히면 안 된다. 사진이 없는 산 주변 10km 를 뒤지면
+    #    '뚜레한우 홍천본점'·'산골캠핑장' 사진이 잡혀 가리산 대표사진이 된다.
+    #    확인해 보면 그 산들은 TourAPI 에 항목은 있는데 `firstimage` 가 비어 있다 —
+    #    필터 탓이 아니라 원본에 사진이 없는 것이라, 없는 채로 두는 게 맞다.
+    #    (앱은 사진이 없으면 능선 일러스트로 대체한다.)
+    attempts = [({"contentTypeId": 12}, False)]
+    attempts += [({}, True)] if base else []
+
     for query in queries:
-        xml = _get(TOUR, {"numOfRows": 20, "pageNo": 1, "MobileOS": "ETC", "MobileApp": "monthly-mountains",
-                          "keyword": query, "arrange": "O", "contentTypeId": 12})
-        if not xml:
-            continue
-        best = None
-        for row in _tags(xml):
-            img = row.get("firstimage") or ""
-            if not img.startswith("http"):
+        for extra, need_title in attempts:
+            xml = _get(TOUR, {"numOfRows": 20, "pageNo": 1, "MobileOS": "ETC",
+                              "MobileApp": "monthly-mountains", "keyword": query,
+                              "arrange": "O", **extra})
+            if not xml:
                 continue
-            try:
-                d = haversine_m(lat, lon, float(row["mapy"]), float(row["mapx"]))
-            except (KeyError, ValueError, TypeError):
-                continue
-            if d > 15000:                   # 15km 밖이면 다른 곳이다
-                continue
-            if best is None or d < best[0]:
-                best = (d, img)
-        if best:
-            return best[1], "한국관광공사 (공공누리 제1유형)"
+            best = None
+            for row in _tags(xml):
+                img = row.get("firstimage") or ""
+                if not img.startswith("http"):
+                    continue
+                if need_title and base not in (row.get("title") or ""):
+                    continue
+                try:
+                    d = haversine_m(lat, lon, float(row["mapy"]), float(row["mapx"]))
+                except (KeyError, ValueError, TypeError):
+                    continue
+                if d > 15000:               # 15km 밖이면 다른 곳이다
+                    continue
+                if best is None or d < best[0]:
+                    best = (d, img)
+            if best:
+                return best[1], "한국관광공사 (공공누리 제1유형)"
     return None, None
 
 
@@ -299,6 +315,10 @@ def build(limit: int, want_photo: bool) -> dict:
     trails = json.loads((PIPE / "trails.json").read_text())
     # 깃대종은 공원 이름('북한산')이 키다 — '국립공원' 접미사는 붙지 않는다.
     flagship = json.loads((PIPE / "flagship_species.json").read_text())["parks"]
+
+    # 손으로 편집한 코스(24개 산). 라우팅보다 정확하므로 있으면 그걸 쓴다.
+    curated_path = PIPE / "curated_courses.json"
+    curated = json.loads(curated_path.read_text())["courses"] if curated_path.exists() else {}
 
     # 기존 id 승계 — 나간 id 를 바꾸면 사용자의 즐겨찾기가 끊긴다.
     prior = {}
@@ -421,12 +441,23 @@ def build(limit: int, want_photo: bool) -> dict:
         if park_type == "national":
             stats["park"] += 1
 
-        # 원본의 '구간명'은 하나의 등산 경로가 아니라 여러 갈래를 아우르는 라벨이다.
-        # 그래서 이름으로 묶어 합치면 지리산 '중태리구간' 45km·22시간 같은 게 나온다 —
-        # 사람이 하루에 걷는 코스가 아니므로 코스로 내보내지 않는다.
-        # 제대로 하려면 구간을 그래프로 이어 들머리→정상 경로를 찾아야 한다(별도 작업).
+        # 코스 우선순위: 편집본 > 라우팅 > 이름 묶음.
+        #
+        # 편집본(`curated_courses.json`, 24개 산)이 1순위인 이유는 원본의 상행 시간이
+        # 낙관적이기 때문이다 — 북한산 우이동~백운대가 편집본 4.7km·180분인데
+        # 원본 합산은 3km·53분으로 나온다.
+        # `routes` 는 구간을 그래프로 이어 만든 들머리→정상 실경로이고,
+        # `courses` 는 이름 묶음이라 하나의 경로가 아니라 여러 갈래의 합이다
+        # (지리산 '중태리구간' 45km·22시간) — 그래서 상한으로 걸러 낸다.
+        #
+        # ⚠️ 여기서 `prev`(직전 생성물)를 쓰면 안 된다. 직전 실행이 만든 라우팅 코스를
+        #    "손입력"으로 착각해 물려받아, 보정을 고쳐도 영원히 반영되지 않는다.
+        #    실제로 한 번 그렇게 돼서 북한산이 0.75km·14분으로 남았다.
+        source = curated.get(name) \
+            or (trail.get("routes") if trail else None) \
+            or (trail["courses"] if trail else [])
         courses = []
-        for c in (trail["courses"] if trail else []):
+        for c in source:
             km, mins = round(c["distanceKm"], 2), int(c["durationMin"])
             if not (0 < km <= COURSE_MAX_KM and 0 < mins <= COURSE_MAX_MIN):
                 continue
