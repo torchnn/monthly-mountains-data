@@ -1,35 +1,50 @@
-# 인수인계 — monthly-mountains-data (2026-07-30)
+# 인수인계 — monthly-mountains-data (2026-08-08)
 
 앱이 읽는 정적 데이터를 만들어 GitHub Pages 로 배포하는 레포.
 전체 그림은 [앱 레포의 docs/HANDOFF.md](https://github.com/torchnn/monthly-mountains/blob/main/docs/HANDOFF.md).
 
-## 🔴 최대 블로커: `DATA_GO_KR_KEY` 미등록
+## ✅ `DATA_GO_KR_KEY` 등록 완료 (2026-08-08)
 
-일요일(2026-08-02)까지 공공데이터포털 활용이 불가능하다. 이 키가 없으면
-`build-mountains` · `forecast-weather` · `train-crowd` 세 워크플로가 전부 못 돈다.
-
-신청할 8개 API 목록과 절차는 앱 레포 HANDOFF 에 정리돼 있다. 요약하면
-`data.go.kr → 데이터찾기 → 데이터목록 → 검색 → 오픈API 탭 → 활용신청`,
-키는 `마이페이지 → 인증키 발급현황`. **계정당 키 하나**로 8개 전부 커버된다.
+**디코딩 키**를 등록해야 한다 — `collect_weather.py` 가 `serviceKey` 를 requests params 로
+넘겨 다시 URL 인코딩하므로, 인코딩 키를 넣으면 이중 인코딩으로 인증에 실패한다.
 
 ```bash
-gh secret set DATA_GO_KR_KEY --repo torchnn/monthly-mountains-data --body "<키>"
+gh secret set DATA_GO_KR_KEY --repo torchnn/monthly-mountains-data --body "<디코딩 키>"
 ```
 
-**추가로 사람이 직접 받아야 하는 파일데이터**(다운로드에 로그인 세션 필요 — 스크립트로 안 됨):
-- 전국등산로표준데이터 (2,919건, GPX) → 코스·누적상승고도
-- 국립공원 공원경계 (SHP) → `parkType` 판정
+`forecast-weather` 는 지금 바로 돈다(24개 산 실측 확인). 나머지 둘은 스크립트가 없다.
+
+### 파일데이터 2건 — 변환본을 커밋해 뒀다
+
+원본은 다운로드에 로그인이 필요해 CI 가 못 받는다. `data/raw/`(gitignore)에 풀고
+가벼운 JSON 으로 바꿔 레포에 넣었다. **CI 는 변환본만 읽는다.**
+
+| 원본 | 스크립트 | 산출물 | 상태 |
+|---|---|---|---|
+| 전국등산로표준데이터 (265MB) | `build_trail_index.py` | `pipeline/trails.json` (1.9MB) | ✅ 산 2,932개 · 코스 7,759개 |
+| 국립공원 공원경계 (SHP) | `build_park_index.py` | `pipeline/park_buffer_3km.json` | ⚠️ 경계가 아니라 **3km 버퍼** |
+
+```bash
+unzip mountain.zip -d data/raw/trails
+python3 pipeline/build_trail_index.py       # → trails.json
+python3 pipeline/build_trail_index.py --match  # 시드 매칭률 확인 (18/24)
+python3 pipeline/build_park_index.py        # → park_buffer_3km.json
+python3 pipeline/geo.py                     # 좌표 변환 자기검사 (GPX 정답 대비 0.01cm)
+```
+
+⚠️ 세 가지 함정이 있다. 앱 레포 HANDOFF 의 **함정 10·11·12** 를 반드시 읽을 것:
+등산로 GPX 고도는 전부 0 · 공원경계는 3km 버퍼 · 등산로 원본에 동명이산이 있다.
 
 ## 현재 배포 상태
 
 ```
 https://torchnn.github.io/monthly-mountains-data/data/v1/
   manifest.json       ✅
-  mountains.json      ✅ 24개 (시드) — 키가 있으면 300개
+  mountains.json      ✅ 300개 (`seed: false`) — build_mountains.py 산출
   crowd_model.json    ✅ 실측 학습본
   signals/<id>.json   ✅ 25개 (signals 레포가 push)
   restaurants/<id>.json ✅ (signals 레포가 push · 네이버 기준 + 구글 단건 보강)
-  forecast/<id>.json  ❌ 키 필요
+  forecast/<id>.json  ✅ 생성 가능 — 크론만 되살리면 된다
 ```
 
 ⚠️ **Pages 는 레포 루트를 서빙**하므로 URL 에 `data/` 가 들어간다.
@@ -39,13 +54,29 @@ https://torchnn.github.io/monthly-mountains-data/data/v1/
 
 | 파일 | 주기 | 상태 |
 |---|---|---|
-| `build-mountains.yml` | 월 1회 | ⚠️ `build_mountains.py` **미구현** |
-| `forecast-weather.yml` | 3시간 | ✅ `collect_weather.py` 있음 (키 필요) |
+| `build-mountains.yml` | 월 1회 | ✅ `build_mountains.py` 작성됨(2026-08-08) |
+| `forecast-weather.yml` | 3시간 | ✅ 실측 동작 확인 |
 | `train-crowd.yml` | 주 1회 | ⚠️ `fetch_visitor_stats.py` 미구현. `train_crowd.py` 는 있음 |
 | `publish-pages.yml` | push | ❌ 미작성 (지금은 Pages 기본 동작에 의존) |
 
-**미구현 스크립트** — 키가 생기면 실제 응답을 보며 작성해야 한다:
-`build_mountains.py`, `validate.py`, `fetch_visitor_stats.py`
+⚠️ 세 워크플로 모두 `schedule:` 이 주석 처리돼 있다("⏸ 크론 정지").
+`build-mountains` 와 `forecast-weather` 는 이제 되살려도 된다.
+
+**미구현 스크립트**: `fetch_visitor_stats.py` 하나뿐.
+(`validate.py` 는 2026-08-03 에 작성됐다 — 이전 표기가 틀렸다.)
+
+### `build_mountains.py`
+
+```bash
+python3 pipeline/build_mountains.py                          # 300개
+python3 pipeline/build_mountains.py --limit 40 --no-photo     # 빠른 시험
+python3 pipeline/validate.py data/v1/mountains.json
+```
+- 조인은 **100대명산 `mtnCd` ↔ `trails.json` 코드**가 1순위(82/100), 없을 때만 `find_for()`
+- `ascentM`·`kmaMountainCode` 는 원천이 없어 항상 null (함정 10, 산악예보 미사용)
+- `parkType` 은 `NATIONAL_PARKS` 손 매핑 — 좌표 판정 불가(함정 11). 없는 산은 `none`
+- 기존 `mountains.json` 의 **id 를 이름으로 승계**한다. id 는 즐겨찾기 저장 키라 바뀌면 안 된다
+- 원천 응답은 `data/raw/api_cache/`(gitignore)에 캐시. 사진만 캐시하지 않는다
 
 ## 이미 확보된 것
 
@@ -56,6 +87,11 @@ https://torchnn.github.io/monthly-mountains-data/data/v1/
 - `pipeline/train_crowd.py` — 실측 학습기. `--max-mape` 로 임계 초과 시 기존 모델 유지
 - `pipeline/make_dev_samples.py` — 앱 번들에 스키마 표본을 넣어 Swift 디코더와의
   계약을 검증한다. **스키마를 바꾸면 반드시 다시 돌릴 것**
+- `pipeline/geo.py` — 좌표 변환(TM 역변환)과 점-다각형 판정. **외부 의존성 없음.**
+  `python3 pipeline/geo.py` 로 자기검사(원본이 같은 지점을 투영좌표·WGS84 둘 다로 주므로
+  실측 대조가 된다 — 303개 지점 최대 오차 0.01cm)
+- `pipeline/trails.json` — 산 2,932개의 코스·들머리. `build_mountains.py` 가 이걸 쓴다.
+  매칭은 반드시 `build_trail_index.find_for()` 로 (동명이산 함정)
 
 ## 주의
 
