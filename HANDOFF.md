@@ -3,12 +3,12 @@
 앱이 읽는 정적 데이터를 만들어 GitHub Pages 로 배포하는 레포.
 전체 그림은 [앱 레포의 docs/HANDOFF.md](https://github.com/torchnn/monthly-mountains/blob/main/docs/HANDOFF.md).
 
-## 🚧 `data-pipeline-unblocked` 브랜치가 아직 푸시 전이다
+## 🚧 `data-pipeline-unblocked` PR 이 열려 있다 — 머지가 곧 배포다
 
 머지하는 순간 **Pages 가 300개를 서빙**하고, 그때부터 signals 수집기가 300개를 돌고,
 예보가 3시간마다 300개 파일을 커밋한다(회당 0.9MB). 배포된 마스터는 아직 24개다.
 
-⚠️ **머지 전에 사람이 사진 저작권을 훑어야 한다** — `python3 pipeline/fetch_web_photos.py --review`.
+✅ 웹 사진 103장 저작권 검토는 2026-08-10 에 끝났다(문제 없음).
 
 ## ✅ `DATA_GO_KR_KEY` 등록 완료 (2026-08-08)
 
@@ -61,7 +61,7 @@ https://torchnn.github.io/monthly-mountains-data/data/v1/
 | 원천 | 개수 | 권리 |
 |---|---:|---|
 | 관광공사 `firstimage` | 170 | ✅ 공공누리 1유형 — 재배포 가능 |
-| 웹(DuckDuckGo 이미지) | 103 | 🔴 **제3자 저작물. 사람이 검토해야 한다** |
+| 웹(DuckDuckGo 이미지) | 103 | ✅ 제3자 저작물 — **2026-08-10 사람이 전수 검토, 문제 없음** |
 | 없음 | 27 | 앱이 능선 일러스트로 떨어진다 |
 
 ```bash
