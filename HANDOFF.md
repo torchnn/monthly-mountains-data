@@ -1,7 +1,14 @@
-# 인수인계 — monthly-mountains-data (2026-08-08)
+# 인수인계 — monthly-mountains-data (2026-08-10)
 
 앱이 읽는 정적 데이터를 만들어 GitHub Pages 로 배포하는 레포.
 전체 그림은 [앱 레포의 docs/HANDOFF.md](https://github.com/torchnn/monthly-mountains/blob/main/docs/HANDOFF.md).
+
+## 🚧 `data-pipeline-unblocked` 브랜치가 아직 푸시 전이다
+
+머지하는 순간 **Pages 가 300개를 서빙**하고, 그때부터 signals 수집기가 300개를 돌고,
+예보가 3시간마다 300개 파일을 커밋한다(회당 0.9MB). 배포된 마스터는 아직 24개다.
+
+⚠️ **머지 전에 사람이 사진 저작권을 훑어야 한다** — `python3 pipeline/fetch_web_photos.py --review`.
 
 ## ✅ `DATA_GO_KR_KEY` 등록 완료 (2026-08-08)
 
@@ -12,7 +19,7 @@
 gh secret set DATA_GO_KR_KEY --repo torchnn/monthly-mountains-data --body "<디코딩 키>"
 ```
 
-`forecast-weather` 는 지금 바로 돈다(24개 산 실측 확인). 나머지 둘은 스크립트가 없다.
+**세 워크플로 모두 크론이 켜져 있고 미구현 스크립트는 없다**(2026-08-09 기준).
 
 ### 파일데이터 2건 — 변환본을 커밋해 뒀다
 
@@ -41,11 +48,31 @@ python3 pipeline/geo.py                     # 좌표 변환 자기검사 (GPX �
 https://torchnn.github.io/monthly-mountains-data/data/v1/
   manifest.json       ✅
   mountains.json      ✅ 300개 (`seed: false`) — build_mountains.py 산출
-  crowd_model.json    ✅ 실측 학습본
-  signals/<id>.json   ✅ 25개 (signals 레포가 push)
+                         사진 273 · 코스 292 · story 296
+  crowd_model.json    ✅ 실측 학습본 · 산 300/300 · 월 곡선 237종
+  photos/<id>.jpg     ✅ 웹 수집분 103장 (23MB · 장당 222KB) — 저작권 검토 대상
+  signals/<id>.json   ✅ 300개 (signals 레포가 push)
   restaurants/<id>.json ✅ (signals 레포가 push · 네이버 기준 + 구글 단건 보강)
-  forecast/<id>.json  ✅ 생성 가능 — 크론만 되살리면 된다
+  forecast/<id>.json  ✅ 3시간마다 갱신
 ```
+
+### 사진 — 원천 두 개, 권리 상태가 다르다
+
+| 원천 | 개수 | 권리 |
+|---|---:|---|
+| 관광공사 `firstimage` | 170 | ✅ 공공누리 1유형 — 재배포 가능 |
+| 웹(DuckDuckGo 이미지) | 103 | 🔴 **제3자 저작물. 사람이 검토해야 한다** |
+| 없음 | 27 | 앱이 능선 일러스트로 떨어진다 |
+
+```bash
+python3 pipeline/fetch_web_photos.py            # 사진 없는 산만, 산당 질의 1회
+python3 pipeline/fetch_web_photos.py --review   # 출처 목록 (저작권 검토용)
+python3 pipeline/fetch_web_photos.py --apply-only   # 대장 → 마스터 반영만 (복구용)
+```
+
+⚠️ `--apply-only` 가 있는 이유: 죽인 줄 알았던 `build_mountains.py` 가 나중에 끝나면서
+마스터를 덮어 사진 URL 103개가 사라진 적이 있다. `pkill` 은 래퍼만 죽인다.
+대장(`pipeline/web_photos.json`)을 따로 두는 것도 그래서다. 앱 레포 HANDOFF **함정 15·16·17** 참고.
 
 ⚠️ **Pages 는 레포 루트를 서빙**하므로 URL 에 `data/` 가 들어간다.
 앱의 `DataStore.remoteBase` 가 이 경로와 맞아야 한다.
@@ -70,13 +97,29 @@ https://torchnn.github.io/monthly-mountains-data/data/v1/
 ```bash
 python3 pipeline/build_mountains.py                          # 300개
 python3 pipeline/build_mountains.py --limit 40 --no-photo     # 빠른 시험
-python3 pipeline/validate.py data/v1/mountains.json
+python3 pipeline/build_crowd_params.py --refresh              # ← 빼먹으면 혼잡도가 평평해진다
+python3 pipeline/validate.py data/v1/                         # 디렉터리를 주면 교차검사까지
 ```
 - 조인은 **100대명산 `mtnCd` ↔ `trails.json` 코드**가 1순위(82/100), 없을 때만 `find_for()`
 - `ascentM`·`kmaMountainCode` 는 원천이 없어 항상 null (함정 10, 산악예보 미사용)
 - `parkType` 은 `NATIONAL_PARKS` 손 매핑 — 좌표 판정 불가(함정 11). 없는 산은 `none`
 - 기존 `mountains.json` 의 **id 를 이름으로 승계**한다. id 는 즐겨찾기 저장 키라 바뀌면 안 된다
 - 원천 응답은 `data/raw/api_cache/`(gitignore)에 캐시. 사진만 캐시하지 않는다
+- 코스 우선순위는 **`curated_courses.json` > 라우팅 > 이름 묶음**.
+  ⚠️ 직전 생성물(`prev`)을 손입력으로 쓰면 안 된다 — 자기가 만든 걸 되먹어 보정이 영영 안 먹는다
+- 난이도는 코스 거리의 **중앙값**을 표고로 상한 건다(최댓값을 쓰면 63m 초록봉이 '어려움'이 됐다)
+
+### `build_crowd_params.py` — 300개 산의 혼잡도 파라미터
+
+`build_mountains.py` 뒤에 **반드시 돌린다**(워크플로에도 넣어 뒀다). 안 돌리면 파라미터 없는
+산이 앱의 `fallback`(baseIndex 45 · 월 곡선 default)으로 떨어져 혼잡도가 전부 같아진다.
+
+- `_absorb_signals()` — `data/v1/signals/*.json` 의 `monthProfile` 을 읽어 `SEARCH_TO_VISIT`(0.689)를
+  곱하고 `confidence: "medium"` 으로 올린다. **signals 를 배포 모델에 잇는 유일한 고리다**
+- `_search_popularity()` — `baseIndex` 서열을 데이터랩 검색량으로 매긴다(손입력 24개와 상관 +0.81).
+  절대값 환산은 하지 않고, 지명 오염 때문에 상위 2%를 자른다
+- `EST_MIN, EST_MAX = 8.0, 22.0` — 추정치는 손입력 최솟값(마니산 20.6) 언저리를 넘지 않아야 한다
+- `--refresh` 는 `confidence: low` 항목만 버리고 다시 만든다. 실측·손입력은 건드리지 않는다
 
 ## 이미 확보된 것
 
@@ -92,6 +135,14 @@ python3 pipeline/validate.py data/v1/mountains.json
   실측 대조가 된다 — 303개 지점 최대 오차 0.01cm)
 - `pipeline/trails.json` — 산 2,932개의 코스·들머리. `build_mountains.py` 가 이걸 쓴다.
   매칭은 반드시 `build_trail_index.find_for()` 로 (동명이산 함정)
+- `pipeline/curated_courses.json` — 손으로 적은 24개 산 41개 코스 + 한 줄 소개 + 봉우리.
+  라우팅보다 우선한다. **여기가 손입력의 유일한 출처다** — 직전 산출물을 손입력 취급하지 말 것
+- `pipeline/fetch_visitor_stats.py` — 국립공원 탐방객 CSV(15107577). 등산로·공원경계와 달리
+  **로그인 없이 직접 링크로 받힌다.** 현재 `atchFileId` 를 긁고 실패하면 상수로 떨어진다
+- `pipeline/fetch_web_photos.py` + `web_photos.json` — 위 '사진' 절 참고
+- `pipeline/validate.py` — 스키마뿐 아니라 **값의 범위**도 본다. 표고 50~2000m ·
+  코스 25km/600분/0.8~6.0km·h · `baseIndex` 0 초과 100 이하. 인자로 `data/v1/` 디렉터리를 주면
+  마스터와 혼잡도 모델의 **커버리지 교차검사**까지 한다(빠진 산을 잡는 건 이것뿐이다)
 
 ## 주의
 
