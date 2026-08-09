@@ -3,12 +3,18 @@
 앱이 읽는 정적 데이터를 만들어 GitHub Pages 로 배포하는 레포.
 전체 그림은 [앱 레포의 docs/HANDOFF.md](https://github.com/torchnn/monthly-mountains/blob/main/docs/HANDOFF.md).
 
-## 🚧 `data-pipeline-unblocked` PR 이 열려 있다 — 머지가 곧 배포다
+## 🚧 [PR #2](https://github.com/torchnn/monthly-mountains-data/pull/2) 가 열려 있다 — 머지가 곧 배포다
 
 머지하는 순간 **Pages 가 300개를 서빙**하고, 그때부터 signals 수집기가 300개를 돌고,
 예보가 3시간마다 300개 파일을 커밋한다(회당 0.9MB). 배포된 마스터는 아직 24개다.
+세 레포 중 **이걸 가장 먼저** 머지해야 한다(로스터가 여기서 나온다).
 
 ✅ 웹 사진 103장 저작권 검토는 2026-08-10 에 끝났다(문제 없음).
+
+⚠️ **이 레포의 main 은 스스로 움직인다.** `daily-signals`·`forecast-weather` 가 main 에 직접
+커밋하므로 작업 브랜치는 가만히 있어도 뒤처지고 생성물에서 충돌한다 — 실제로 PR 을 열자마자
+`data/v1/signals/*.json` 25개가 충돌했다. 해소법은 앱 레포 HANDOFF **함정 20**.
+**브랜치는 짧게 살리고 빨리 머지할 것.**
 
 ## ✅ `DATA_GO_KR_KEY` 등록 완료 (2026-08-08)
 
