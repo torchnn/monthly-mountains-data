@@ -599,7 +599,7 @@
     "seoraksan": {
       "baseIndex": 39.4,
       "hourCurve": "alpine",
-      "monthProfile": "autumnLeaf",
+      "monthProfile": "seoraksan",
       "confidence": "high",
       "typicalDurationMin": 480
     },

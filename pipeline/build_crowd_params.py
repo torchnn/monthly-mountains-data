@@ -138,6 +138,50 @@ def level(index: float) -> str:
     return next(label for bound, label in LEVELS if index < bound)
 
 
+# 검색량 → 실제 방문의 진폭 감쇠. 설악산이 검색·실측을 둘 다 갖고 있어 **측정**한 값이다
+# (10월 검색 3.44 vs 실측 2.74). 앱 레포 make_seed.py 와 같은 값이어야 한다.
+SEARCH_TO_VISIT = 0.689
+
+
+def _absorb_signals(model: dict, ids: set[str]) -> int:
+    """`data/v1/signals/<id>.json` 의 산별 월 곡선을 모델에 넣는다.
+
+    signals 레포가 데이터랩 검색량으로 만든 곡선이다. 추정 유형 프로필(urban/autumnLeaf/…)
+    보다 훨씬 낫고, 이게 들어오면 그 산은 `confidence: medium` 이 된다.
+    검색은 실제보다 진폭이 크므로 `SEARCH_TO_VISIT` 로 눌러서 쓴다.
+    """
+    signals_dir = MOUNTAINS.parent / "signals"
+    if not signals_dir.is_dir():
+        return 0
+
+    count = 0
+    for path in sorted(signals_dir.glob("*.json")):
+        if path.name == "index.json":
+            continue
+        try:
+            data = json.loads(path.read_text())
+        except (OSError, ValueError):
+            continue
+        mid = data.get("mountainId")
+        raw = data.get("monthProfile")
+        if mid not in ids or not raw or len(raw) != 12:
+            continue
+
+        damped = [v ** SEARCH_TO_VISIT for v in raw]
+        mean = sum(damped) / 12
+        if mean <= 0:
+            continue
+        model["monthProfiles"][mid] = [round(v / mean, 4) for v in damped]
+
+        params = model["mountains"].setdefault(mid, {})
+        params["monthProfile"] = mid
+        # 손으로 적은 high(설악산 실측)는 낮추지 않는다.
+        if params.get("confidence") != "high":
+            params["confidence"] = "medium"
+        count += 1
+    return count
+
+
 def check_distribution(model: dict, mountains: list[dict]) -> bool:
     """앱의 일별 지수 식을 그대로 옮겨 5단계가 고르게 쓰이는지 본다.
 
@@ -205,6 +249,14 @@ def main() -> int:
     for k in [k for k in known if k not in {m["id"] for m in mountains}]:
         if known[k].get("confidence") == "low":
             del known[k]
+
+    # ── signals 레포가 수집한 산별 실측 곡선을 먼저 흡수한다.
+    #
+    # 이게 없으면 데이터랩을 300개로 넓혀 수집해도 **배포되는 모델에는 영영 반영되지 않는다** —
+    # 지금까지 그 경로는 앱 레포의 make_seed.py 가 번들용으로 읽는 것뿐이었다.
+    absorbed = _absorb_signals(model, {m["id"] for m in mountains})
+    if absorbed:
+        print(f"signals 산별 월 곡선 {absorbed}개 흡수 (추정 → 검색 기반)")
 
     train = [m for m in mountains if m["id"] in known]
     todo = [m for m in mountains if m["id"] not in known]

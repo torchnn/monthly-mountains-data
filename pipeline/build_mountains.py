@@ -137,19 +137,34 @@ def latlon_to_grid(lat: float, lon: float) -> tuple[int, int]:
 # ---------------------------------------------------------------- 원천 수집
 
 
+# 마지막 _get 호출이 '실패' 였는지. 사진 캐시가 실패를 '사진 없음' 으로 굳히는 걸 막는다.
+_LAST_CALL_FAILED = False
+
+
 def _get(url: str, params: dict) -> str | None:
-    """공공데이터포털은 간헐적으로 빈 응답·XML 에러를 준다 — 재시도 후 포기."""
+    """공공데이터포털은 간헐적으로 빈 응답·XML 에러를 준다 — 재시도 후 포기.
+
+    ⚠️ 관광공사(B551011)는 짧은 시간에 몰아 부르면 **HTTP 429** 를 준다.
+       사진을 못 찾은 산마다 최대 6회씩 물어보다가 실제로 429 가 쏟아졌다.
+       429 는 '잠깐 쉬라'는 뜻이므로 일반 오류보다 훨씬 길게 기다린다.
+    """
+    global _LAST_CALL_FAILED
     for attempt in range(RETRIES):
         try:
             r = requests.get(url, params={**params, "serviceKey": KEY}, timeout=TIMEOUT)
+            if r.status_code == 429:
+                time.sleep(5.0 * (attempt + 1))
+                raise requests.HTTPError("HTTP 429 (호출 제한)")
             if r.status_code != 200:
                 raise requests.HTTPError(f"HTTP {r.status_code}")
             if "SERVICE_KEY_IS_NOT_REGISTERED" in r.text:
                 sys.exit(f"인증키가 이 API 에 승인되지 않았습니다: {url}")
+            _LAST_CALL_FAILED = False
             return r.text
         except Exception as exc:  # noqa: BLE001 — 어떤 실패든 재시도 후 넘어간다
             if attempt == RETRIES - 1:
                 print(f"  ! 실패 {url.rsplit('/', 1)[-1]}: {exc}", file=sys.stderr)
+                _LAST_CALL_FAILED = True
                 return None
             time.sleep(1.5 * (attempt + 1))
     return None
@@ -193,6 +208,42 @@ def _paged(url: str, params: dict, name: str, per_page: int = 1000) -> list[dict
 
 
 def fetch_photo(name: str, lat: float, lon: float) -> tuple[str | None, str | None]:
+    """캐시를 먼저 본다. **못 찾은 것도 기록**한다 — 사진 없는 산이 130개라
+    매 실행마다 산당 최대 10회씩 다시 물어보면 빌드가 40분씩 늘어난다."""
+    cached = _photo_cache()
+    if name in cached:
+        url = cached[name]
+        return (url, "한국관광공사 (공공누리 제1유형)") if url else (None, None)
+    global _LAST_CALL_FAILED
+    _LAST_CALL_FAILED = False
+    url, credit = _fetch_photo_uncached(name, lat, lon)
+    # 호출이 실패해서 못 찾은 것을 '사진 없음' 으로 굳히면, 다음 실행에서 영영 재시도하지 않는다.
+    # 호출 제한(429)에 걸린 회차가 그대로 캐시에 박히는 사고가 실제로 있었다.
+    if url or not _LAST_CALL_FAILED:
+        cached[name] = url
+        _save_photo_cache()
+    # 관광공사는 몰아 부르면 429 를 준다 — 산 사이에 숨을 둔다.
+    time.sleep(1.2)
+    return url, credit
+
+
+_PHOTOS: dict[str, str | None] | None = None
+
+
+def _photo_cache() -> dict:
+    global _PHOTOS
+    if _PHOTOS is None:
+        path = CACHE / "photos.json"
+        _PHOTOS = json.loads(path.read_text()) if path.exists() else {}
+    return _PHOTOS
+
+
+def _save_photo_cache() -> None:
+    CACHE.mkdir(parents=True, exist_ok=True)
+    (CACHE / "photos.json").write_text(json.dumps(_PHOTOS, ensure_ascii=False))
+
+
+def _fetch_photo_uncached(name: str, lat: float, lon: float) -> tuple[str | None, str | None]:
     """관광공사 대표사진. 좌표가 멀거나 관광지 유형이 아니면 버린다.
 
     ⚠️ 키워드 검색은 '북한산' 으로 '북한산 둘레캠프'(contenttypeid 28) 를 1등으로 준다.
@@ -241,7 +292,62 @@ def fetch_photo(name: str, lat: float, lon: float) -> tuple[str | None, str | No
                     best = (d, img)
             if best:
                 return best[1], "한국관광공사 (공공누리 제1유형)"
+
+    # 3차: `firstimage` 가 비어도 **추가 이미지**(detailImage2)는 있는 경우가 있다.
+    #      표본 8개 중 4개가 여기서 나왔다.
+    #
+    # ⚠️ 다만 '홍천 가리산 레포츠파크'·'황석산청소년수련원' 처럼 산 이름을 딴 시설이 섞인다.
+    #    시설 사진을 산 대표사진으로 올리면 능선 일러스트보다 나쁘므로,
+    #    제목이 산 이름(+지역 괄호)과 사실상 같은 것만 받는다.
+    for row in _keyword_candidates(base or name):
+        title = (row.get("title") or "").strip()
+        if _facility_like(title, base or name):
+            continue
+        try:
+            if haversine_m(lat, lon, float(row["mapy"]), float(row["mapx"])) > 15000:
+                continue
+        except (KeyError, ValueError, TypeError):
+            continue
+        xml = _get(TOUR.replace("searchKeyword2", "detailImage2"),
+                   {"contentId": row.get("contentid"), "imageYN": "Y",
+                    "numOfRows": 5, "pageNo": 1, "MobileOS": "ETC", "MobileApp": "monthly-mountains"})
+        if not xml:
+            continue
+        for img in _tags(xml):
+            url = (img.get("originimgurl") or "").strip()
+            if url.startswith("http"):
+                return url, "한국관광공사 (공공누리 제1유형)"
     return None, None
+
+
+def _keyword_candidates(keyword: str) -> list[dict]:
+    xml = _get(TOUR, {"numOfRows": 5, "pageNo": 1, "MobileOS": "ETC",
+                      "MobileApp": "monthly-mountains", "keyword": keyword, "arrange": "O"})
+    return _tags(xml) if xml else []
+
+
+# 산 이름을 딴 시설. 이런 제목의 사진은 산이 아니라 건물이다.
+FACILITY = ("파크", "수련원", "캠핑", "펜션", "리조트", "식당", "주차장", "센터", "휴양림",
+            "박물관", "미술관", "관광지", "체험", "농원", "마을", "온천", "골프")
+
+
+# 산 자체를 가리키는 수식어. 이게 붙은 제목은 시설이 아니라 산 사진으로 본다.
+MOUNTAIN_WORDS = ("정상", "능선", "등산로", "전경", "설경", "일출", "단풍", "계곡", "봉", "산")
+
+
+def _facility_like(title: str, name: str) -> bool:
+    """제목이 산 그 자체가 아니라 그 이름을 딴 시설인지.
+
+    '홍천 가리산 레포츠파크'·'황석산청소년수련원' 같은 게 실제로 온다 —
+    건물 사진을 산 대표사진으로 올리면 능선 일러스트보다 나쁘다.
+    """
+    if not title or name not in title:
+        return True
+    if any(word in title for word in FACILITY):
+        return True
+    # 이름을 빼고 남는 게 지역·수식어 정도면 산 사진으로 본다.
+    rest = re.sub(r"\(.*?\)", "", title).replace(name, "").strip()
+    return bool(rest) and len(rest) > 6 and not any(w in rest for w in MOUNTAIN_WORDS)
 
 
 # ---------------------------------------------------------------- 조립
