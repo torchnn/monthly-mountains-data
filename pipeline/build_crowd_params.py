@@ -143,6 +143,31 @@ def level(index: float) -> str:
 SEARCH_TO_VISIT = 0.689
 
 
+def _search_popularity() -> dict[str, float]:
+    """signals 의 데이터랩 검색량. 서열 신호로만 쓴다.
+
+    ⚠️ 산 이름이 지명이기도 하면 도시의 검색량이 섞인다 — 안산 20.7 · 오산 9.4 · 금산 3.3 은
+       설악산(2.74)보다 높게 나왔다. 검증된 산 중 최대치를 넘는 값은 신뢰하지 않고 잘라낸다.
+    """
+    out: dict[str, float] = {}
+    signals_dir = MOUNTAINS.parent / "signals"
+    if not signals_dir.is_dir():
+        return out
+    for path in signals_dir.glob("*.json"):
+        if path.name == "index.json":
+            continue
+        try:
+            data = json.loads(path.read_text())
+        except (OSError, ValueError):
+            continue
+        if data.get("popularity"):
+            out[data["mountainId"]] = float(data["popularity"])
+    if not out:
+        return out
+    cap = max(sorted(out.values())[: int(len(out) * 0.98)] or [1.0])
+    return {k: min(v, cap) for k, v in out.items()}
+
+
 def _absorb_signals(model: dict, ids: set[str]) -> int:
     """`data/v1/signals/<id>.json` 의 산별 월 곡선을 모델에 넣는다.
 
@@ -258,25 +283,48 @@ def main() -> int:
     if absorbed:
         print(f"signals 산별 월 곡선 {absorbed}개 흡수 (추정 → 검색 기반)")
 
-    train = [m for m in mountains if m["id"] in known]
-    todo = [m for m in mountains if m["id"] not in known]
+    # signals 흡수는 곡선·신뢰도만 채우므로 baseIndex 가 없는 항목이 생긴다.
+    # '이미 값이 있다'의 기준은 id 존재가 아니라 **baseIndex 존재**다.
+    train = [m for m in mountains if "baseIndex" in known.get(m["id"], {})]
+    todo = [m for m in mountains if "baseIndex" not in known.get(m["id"], {})]
     if not todo:
         print("이미 전부 채워져 있습니다. (추정치를 다시 계산하려면 --refresh)")
         return 0
 
-    # ── 합성 점수로 서열을 매기고, 백분위를 baseIndex 구간에 늘어놓는다.
-    scored = sorted(((raw_score(m, total_km[m["id"]]), m) for m in todo), key=lambda p: p[0])
-    print(f"추정 대상 {len(scored)}개 — 합성 점수 "
-          f"{scored[0][0]:.3f}~{scored[-1][0]:.3f} (중앙 {scored[len(scored)//2][0]:.3f})")
+    # ── 서열을 매기고, 백분위를 baseIndex 구간에 늘어놓는다.
+    #
+    # 순위 신호는 **데이터랩 검색량**이 1순위다. 손입력 24개와의 상관이 +0.81 로,
+    # 마스터 지표만으로 만든 합성 점수(상관 0.4 안팎)와 비교가 안 된다.
+    # 검색량이 없는 산에서만 합성 점수로 내려간다.
+    #
+    # ⚠️ 검색량을 절대값으로 환산하지는 않는다. 손입력 24개로 회귀하면
+    #    baseIndex ≈ 32.31 + 7.50·log(검색량) 인데, 이 식을 학습 범위 밖(검색량 0.006 등)에
+    #    외삽하면 241개 중 140개가 바닥에 붙는다. 서열만 쓰고 배치는 구간에 맡긴다.
+    pop = _search_popularity()
+    ranked_by_search = sum(1 for m in todo if m["id"] in pop)
+    if ranked_by_search:
+        print(f"  서열 근거: 검색량 {ranked_by_search}개 · 합성 점수 {len(todo) - ranked_by_search}개")
 
-    for rank, (score, m) in enumerate(scored):
+    def rank_key(m: dict) -> tuple[int, float]:
+        """검색량이 있으면 그걸로, 없으면 합성 점수로. 두 무리는 섞지 않는다 —
+        서로 다른 척도를 한 줄에 세우면 순서가 뒤엉킨다."""
+        if m["id"] in pop:
+            return (1, math.log(pop[m["id"]]))
+        return (0, raw_score(m, total_km[m["id"]]))
+
+    scored = sorted(((rank_key(m), m) for m in todo), key=lambda p: p[0])
+    print(f"추정 대상 {len(scored)}개")
+
+    for rank, (_key, m) in enumerate(scored):
         pct = rank / max(1, len(scored) - 1)
         acc = accessibility(m["lat"], m["lon"])
+        prior = known.get(m["id"], {})
         known[m["id"]] = {
             "baseIndex": round(EST_MIN + (EST_MAX - EST_MIN) * pct, 1),
             "hourCurve": hour_curve_for(m, acc),
-            "monthProfile": month_profile_for(m, acc),
-            "confidence": "low",            # 추정치임을 앱이 배지로 밝힌다
+            # signals 가 이 산의 곡선을 이미 넣었으면 유형 프로필로 되돌리지 않는다.
+            "monthProfile": prior.get("monthProfile") or month_profile_for(m, acc),
+            "confidence": prior.get("confidence", "low"),
             "typicalDurationMin": duration_for(m),
         }
 
