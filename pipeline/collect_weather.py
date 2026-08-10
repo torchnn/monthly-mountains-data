@@ -39,9 +39,16 @@ SKY_CODE = {"1": "clear", "3": "partlyCloudy", "4": "cloudy"}
 PTY_CODE = {"1": "rain", "2": "sleet", "3": "snow", "4": "rain", "5": "rain", "6": "sleet", "7": "snow"}
 
 
-def get_json(url: str, params: dict) -> dict | None:
-    """공공데이터포털은 간헐적으로 XML 에러나 빈 응답을 준다 — 조용히 재시도하고 포기한다."""
-    params = {**params, "serviceKey": SERVICE_KEY, "dataType": "JSON"}
+def get_json(url: str, params: dict, fmt_param: str = "dataType") -> dict | None:
+    """공공데이터포털은 간헐적으로 XML 에러나 빈 응답을 준다 — 조용히 재시도하고 포기한다.
+
+    ⚠️ 응답 형식을 고르는 파라미터 이름이 기관마다 다르다.
+       기상청은 `dataType=JSON`, 에어코리아는 `returnType=json` 이다.
+       틀린 이름을 보내면 **에러가 아니라 XML 이 200 으로 돌아와서**
+       `r.json()` 이 "Expecting value: line 1 column 1" 로 죽는다 —
+       인증키 문제로 착각하기 딱 좋으니 호출부에서 반드시 맞춰 줄 것.
+    """
+    params = {**params, "serviceKey": SERVICE_KEY, fmt_param: "JSON" if fmt_param == "dataType" else "json"}
     for attempt in range(RETRIES):
         try:
             r = requests.get(url, params=params, timeout=TIMEOUT)
@@ -57,10 +64,21 @@ def get_json(url: str, params: dict) -> dict | None:
 
 
 def _items(payload: dict | None) -> list[dict]:
+    """`response.body.items` 를 목록으로 꺼낸다.
+
+    기관마다 모양이 다르다 — 기상청은 `items: {item: [...]}`, 에어코리아는 `items: [...]`.
+    한쪽만 가정하면 다른 쪽에서 조용히 빈 목록이 나와, 값이 안 채워지는데도
+    에러 로그가 하나도 안 남는다(대기질이 계속 null 이던 원인).
+    """
     try:
-        return payload["response"]["body"]["items"]["item"]
+        items = payload["response"]["body"]["items"]
     except (KeyError, TypeError):
         return []
+    if isinstance(items, dict):
+        items = items.get("item", [])
+    if isinstance(items, dict):     # 결과가 1건이면 리스트가 아니라 객체로 온다
+        return [items]
+    return items if isinstance(items, list) else []
 
 
 def base_datetime(now: datetime) -> tuple[str, str]:
@@ -174,7 +192,8 @@ def fetch_air_by_region() -> dict[str, dict]:
     out = {}
     for region in regions:
         items = _items(get_json(AIRKOREA, {"sidoName": region, "numOfRows": 100,
-                                           "pageNo": 1, "ver": "1.3"}))
+                                           "pageNo": 1, "ver": "1.3"},
+                                fmt_param="returnType"))
         pm10 = [int(v) for v in (i.get("pm10Value") for i in items) if _is_int(v)]
         pm25 = [int(v) for v in (i.get("pm25Value") for i in items) if _is_int(v)]
         if not pm10:
@@ -201,25 +220,44 @@ def _pm10_grade(pm10: int) -> int:
     return 1 if pm10 <= 30 else 2 if pm10 <= 80 else 3 if pm10 <= 150 else 4
 
 
-def fetch_alerts() -> dict[str, list[dict]]:
-    """기상특보를 전국 일괄 조회해 지역명으로 인덱싱한다."""
+def fetch_alerts() -> list[dict]:
+    """지금 **발효 중인** 기상특보를 종류별로 가져온다.
+
+    ⚠️ `getWthrWrnList` 를 쓰면 안 된다. 그건 통보문 '목록'이라
+       발표·변경·해제가 뒤섞인 이력이 오고, 응답 필드가 `stnId/title/tmFc/tmSeq`뿐이라
+       **지역 정보가 아예 없다.** 지역 없이 매칭하면 전국 특보 30건이 모든 산에 붙는다
+       (실제로 북한산 예보에 풍랑주의보가 들어갔다).
+
+    `getPwnStatus` 의 `t6` 이 현재 발효 현황을 이런 자유 텍스트로 준다:
+
+        o 강풍주의보 : 전라남도(거문도.초도), 제주도(제주도산지, 제주시동부), 울릉도.독도
+        o 풍랑경보 : 남해동부바깥먼바다, 제주도앞바다(...)
+
+    줄마다 '종류 : 지역목록' 이므로 그대로 갈라 쓴다.
+    """
     now = datetime.now(KST)
     payload = get_json(
-        f"{KMA_BASE}/WthrWrnInfoService/getWthrWrnList",
-        {"numOfRows": 100, "pageNo": 1, "stnId": 108,
+        f"{KMA_BASE}/WthrWrnInfoService/getPwnStatus",
+        {"numOfRows": 10, "pageNo": 1, "stnId": 108,
          "fromTmFc": (now - timedelta(days=1)).strftime("%Y%m%d"),
          "toTmFc": now.strftime("%Y%m%d")},
     )
-    by_region: dict[str, list[dict]] = {}
-    for item in _items(payload):
-        title = item.get("title") or item.get("warnVar", "")
-        area = item.get("areaName", "")
-        if not title:
+    items = _items(payload)
+    if not items:
+        return []
+
+    status = str(items[0].get("t6") or "")
+    alerts = []
+    for line in status.splitlines():
+        line = line.strip()
+        if not line.startswith("o ") or " : " not in line:
             continue
-        by_region.setdefault(area, []).append(
-            {"type": title, "message": item.get("command"), "issuedAt": None}
-        )
-    return by_region
+        kind, areas = line[2:].split(" : ", 1)
+        kind = kind.strip()
+        if kind == "없음" or not areas.strip():
+            continue
+        alerts.append({"type": kind, "areas": areas.strip()})
+    return alerts
 
 
 def sample_forecast(mountain: dict, now: datetime) -> dict:
@@ -276,7 +314,7 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
 
     air_by_region = {} if args.dry_run else fetch_air_by_region()
-    alerts_by_region = {} if args.dry_run else fetch_alerts()
+    active_alerts = [] if args.dry_run else fetch_alerts()
 
     written = 0
     for mountain in mountains:
@@ -292,7 +330,7 @@ def main() -> int:
                 "updatedAt": _iso(now),
                 "weather": parse_forecast(items),
                 "air": air_by_region.get(region),
-                "alerts": _match_alerts(alerts_by_region, mountain),
+                "alerts": _match_alerts(active_alerts, mountain),
                 "closures": [],   # TODO: 국립공원 통제정보 연동
                 "crowdDaily": [], # train-crowd 가 채운다
             }
@@ -307,12 +345,31 @@ def main() -> int:
     return 0
 
 
-def _match_alerts(by_region: dict[str, list[dict]], mountain: dict) -> list[dict]:
-    """특보 지역명은 '서울', '경기북부' 처럼 와서 시도명 부분일치로 맞춘다."""
+# 바다에만 내리는 특보 — 산에는 뜨면 안 된다. 한라산이 '제주도앞바다'에 걸리는 걸 막는다.
+MARINE_ALERTS = ("풍랑", "폭풍해일", "해일")
+
+
+def _match_alerts(alerts: list[dict], mountain: dict) -> list[dict]:
+    """이 산에 실제로 걸리는 특보만 남긴다.
+
+    지역 문자열은 '전라남도(거문도.초도), 제주도(제주도산지, 제주시동부)' 처럼 오므로
+    시도명 부분일치로 본다. 빈 문자열은 무엇에나 매칭되므로 반드시 먼저 걸러낸다 —
+    이전 구현이 정확히 그 이유로 전국 특보를 전부 붙였다.
+    """
+    region = (mountain.get("region") or "").strip()
+    sigungu = (mountain.get("sigungu") or "").strip()
+    if not region:
+        return []
+
     hits = []
-    for area, alerts in by_region.items():
-        if mountain["region"] in area or area in mountain["sigungu"]:
-            hits.extend(alerts)
+    for alert in alerts:
+        if any(m in alert["type"] for m in MARINE_ALERTS):
+            continue
+        areas = alert["areas"]
+        # '서울' → '서울특별시'·'서울' 둘 다 잡히도록 시도명 앞 두 글자로 본다.
+        key = region[:2]
+        if key and (key in areas or (sigungu and sigungu.split()[-1] in areas)):
+            hits.append({"type": alert["type"], "message": alert["areas"], "issuedAt": None})
     return hits
 
 

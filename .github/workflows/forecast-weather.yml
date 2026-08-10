@@ -5,10 +5,8 @@ name: forecast-weather
 # public 레포이므로 Actions 분은 무제한 — 가장 무거운 워크플로를 여기 두는 이유다.
 
 on:
-  # ⏸ 크론 정지 — DATA_GO_KR_KEY 가 아직 없다 (공공데이터포털 점검 중). 자동 실행하면 매번 실패만 쌓인다.
-  #    갖춰지면 아래 두 줄의 주석을 되돌린다. (README "현재 상태" 참고)
-  # schedule:
-  # - cron: "20 */3 * * *"   # 발표 20분 뒤에 받는다 (KMA 는 정시 직후 갱신)
+  schedule:
+    - cron: "20 */3 * * *"   # 발표 20분 뒤에 받는다 (KMA 는 정시 직후 갱신)
   workflow_dispatch:
 
 permissions:
