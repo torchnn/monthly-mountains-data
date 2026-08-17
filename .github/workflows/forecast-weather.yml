@@ -35,9 +35,20 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: 날씨·대기질·특보 수집
+        id: collect
         env:
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
-        run: python pipeline/collect_weather.py
+        # 포털이 죽었거나 회차가 길어지면 스크립트가 스스로 멈추고 **종료코드 3** 을 준다.
+        # 그때도 그때까지 받은 예보는 커밋해야 하므로 여기서 죽이지 않는다 —
+        # 마지막 단계에서 빨간불로 만든다. (그냥 실패시키면 커밋이 skip 되어
+        # 부분 진척까지 버려진다. 2026-08-17 회차가 그렇게 통째로 없어졌다.)
+        run: |
+          set +e
+          python pipeline/collect_weather.py
+          rc=$?
+          set -e
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          [ "$rc" = "0" ] || [ "$rc" = "3" ] || exit "$rc"
 
       - name: 변경분 커밋
         run: |
@@ -48,3 +59,12 @@ jobs:
           git diff --cached --quiet && echo "변경 없음" && exit 0
           git commit -m "forecast: $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
+
+      - name: 중단된 회차는 빨간불로 남긴다
+        if: steps.collect.outputs.rc == '3'
+        # 받은 만큼은 위에서 커밋됐다. 다만 조용히 초록으로 끝내면
+        # "예보가 몇 시간째 그대로" 인 걸 아무도 못 본다.
+        run: |
+          echo "포털 장애 또는 시간 초과로 이번 회차를 중간에 끊었습니다 — 받은 만큼은 커밋했습니다."
+          echo "3시간 뒤 회차가 이어받습니다. 계속 빨간불이면 공공데이터포털 상태를 확인하세요."
+          exit 1

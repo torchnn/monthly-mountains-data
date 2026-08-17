@@ -31,6 +31,22 @@ SERVICE_KEY = os.environ.get("DATA_GO_KR_KEY", "")
 TIMEOUT = 10
 RETRIES = 3
 
+# 산 하나가 완전히 실패하면 3회 × 10초 + 대기(1.5·3초) = **약 34초**를 태운다.
+# 포털이 통째로 죽으면 300산 × 34초 = 175분이라 20분 상한에 걸려 끊기고,
+# 그때는 커밋 단계가 skip 되어 **그 회차가 통째로 없어진다**.
+# 2026-08-17 21:44 회차가 정확히 그랬다 — 로그가 34~35초 간격의 connect timeout 으로만 채워졌다.
+#
+# 연속으로 이만큼 실패하면 그 산의 문제가 아니라 포털이 죽은 것이다.
+# 300번 확인해 볼 이유가 없으므로 그만두고, 그때까지 받은 것만 저장한다.
+# 12산 = 약 7분 — 일시적 흔들림과 진짜 장애를 가르기에 충분하고 상한 안에 들어온다.
+OUTAGE_STREAK = 12
+
+# 연속 실패만으로는 부족하다. 성공과 실패가 섞이면 streak 이 계속 끊겨
+# 150산이 34초씩 실패해도 85분을 태운다. 그래서 벽시계로도 막는다.
+# 잡 상한이 20분이고 평시 실측이 9~13분이므로, 14분에서 스스로 끊고
+# 받은 것을 저장한다 — 러너가 끊으면 저장도 커밋도 못 한다.
+DEADLINE_SEC = 14 * 60
+
 KMA_BASE = "https://apis.data.go.kr/1360000"
 AIRKOREA = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty"
 
@@ -317,13 +333,31 @@ def main() -> int:
     active_alerts = [] if args.dry_run else fetch_alerts()
 
     written = 0
+    miss_streak = 0
+    outage = False
+    deadline = time.monotonic() + DEADLINE_SEC
     for mountain in mountains:
+        if not args.dry_run and time.monotonic() > deadline:
+            print(f"  !! {DEADLINE_SEC // 60}분을 넘겨 여기서 멈춥니다"
+                  f" ({written}/{len(mountains)}개 저장). 3시간 뒤 회차가 이어받습니다.",
+                  file=sys.stderr)
+            outage = True
+            break
         if args.dry_run:
             payload = sample_forecast(mountain, now)
         else:
             items = fetch_village_forecast(mountain["grid"]["nx"], mountain["grid"]["ny"], now)
             if not items:
-                continue  # 이번 회차는 건너뛴다 — 앱은 직전 파일을 계속 쓴다
+                # 이번 산은 건너뛴다 — 앱은 직전 파일을 계속 쓴다.
+                miss_streak += 1
+                if miss_streak >= OUTAGE_STREAK:
+                    print(f"  !! {OUTAGE_STREAK}산 연속 실패 — 포털이 죽은 것으로 보고 여기서 멈춥니다"
+                          f" ({written}/{len(mountains)}개 저장). 3시간 뒤 회차가 이어받습니다.",
+                          file=sys.stderr)
+                    outage = True
+                    break
+                continue
+            miss_streak = 0
             region = mountain["airRegion"]
             payload = {
                 "mountainId": mountain["id"],
@@ -342,6 +376,13 @@ def main() -> int:
 
     _update_manifest(args.out, now, forecast_count=written)
     print(f"forecast {written}/{len(mountains)}개 작성" + (" (dry-run)" if args.dry_run else ""))
+
+    # 받은 것은 저장하고 커밋까지 가되(부분 진척은 버리지 않는다),
+    # 장애였다는 사실은 빨간불로 남긴다. 조용히 초록으로 끝나면
+    # "왜 예보가 몇 시간째 안 바뀌지" 를 아무도 못 본다.
+    if outage:
+        print("포털 장애로 회차를 중단했습니다.", file=sys.stderr)
+        return 3
     return 0
 
 
