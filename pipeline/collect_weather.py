@@ -215,8 +215,13 @@ def _iso(stamp: datetime) -> str:
     return stamp.astimezone(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def fetch_air_by_region() -> dict[str, dict]:
-    """시도별 실시간 대기질. 산마다 부르지 않고 17개 시도만 부른다."""
+def fetch_air_by_region() -> tuple[dict[str, dict], bool]:
+    """시도별 실시간 대기질. 산마다 부르지 않고 17개 시도만 부른다.
+
+    두 번째 값은 **포털이 죽었는가**다. 이걸 돌려주지 않으면, 여기서 이미 알아낸 사실을
+    뒤의 특보와 산 루프가 버리고 처음부터 다시 확인한다 — 판정에 8분을 더 쓴다.
+    (2026-08-18 사고 뒤 계산: 대기질만 막으면 17.2분 → 9.2분. 판정을 넘기면 1.7분.)
+    """
     regions = ["서울", "인천", "경기", "강원", "충북", "충남", "대전", "세종",
                "전북", "전남", "광주", "경북", "경남", "대구", "울산", "부산", "제주"]
     out = {}
@@ -237,7 +242,7 @@ def fetch_air_by_region() -> dict[str, dict]:
             if dead_streak >= PORTAL_DOWN_STREAK:
                 print(f"  !! 시도 {PORTAL_DOWN_STREAK}곳 연속 실패 — 포털이 죽었다고 보고"
                       f" 대기질 수집을 그만둡니다({len(out)}/{len(regions)}곳).", file=sys.stderr)
-                break
+                return out, True
             continue
         dead_streak = 0
         items = _items(payload)
@@ -251,7 +256,7 @@ def fetch_air_by_region() -> dict[str, dict]:
             "pm25": round(sum(pm25) / len(pm25)) if pm25 else None,
             "grade": _pm10_grade(avg10),
         }
-    return out
+    return out, False
 
 
 def _is_int(value) -> bool:
@@ -360,17 +365,30 @@ def main() -> int:
     out_dir = args.out / "forecast"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    air_by_region = {} if args.dry_run else fetch_air_by_region()
-    active_alerts = [] if args.dry_run else fetch_alerts()
+    # 대기질이 먼저 도는 김에 **포털이 살아 있는지 확인하는 역할까지** 맡는다.
+    # 셋이 내리 실패하면 그때 이미 답이 나왔으므로, 특보와 산 300개는 건너뛴다.
+    # 세 곳 모두 같은 호스트(apis.data.go.kr)이고, 2026-08-18 사고의 실제 오류도
+    # 엔드포인트별 오류가 아니라 호스트 연결 실패(ConnectTimeoutError)였다.
+    portal_down = False
+    if args.dry_run:
+        air_by_region, active_alerts = {}, []
+    else:
+        air_by_region, portal_down = fetch_air_by_region()
+        active_alerts = [] if portal_down else fetch_alerts()
 
     written = 0
     miss_streak = 0
     outage = False
     deadline = time.monotonic() + DEADLINE_SEC
+    total = len(mountains)   # 아래에서 목록을 비우므로 미리 세어 둔다
+    if portal_down:
+        print("  !! 포털이 죽어 있어 산별 예보는 시도하지 않습니다.", file=sys.stderr)
+        outage = True
+        mountains = []
     for mountain in mountains:
         if not args.dry_run and time.monotonic() > deadline:
             print(f"  !! {DEADLINE_SEC // 60}분을 넘겨 여기서 멈춥니다"
-                  f" ({written}/{len(mountains)}개 저장). 3시간 뒤 회차가 이어받습니다.",
+                  f" ({written}/{total}개 저장). 3시간 뒤 회차가 이어받습니다.",
                   file=sys.stderr)
             outage = True
             break
@@ -383,7 +401,7 @@ def main() -> int:
                 miss_streak += 1
                 if miss_streak >= OUTAGE_STREAK:
                     print(f"  !! {OUTAGE_STREAK}산 연속 실패 — 포털이 죽은 것으로 보고 여기서 멈춥니다"
-                          f" ({written}/{len(mountains)}개 저장). 3시간 뒤 회차가 이어받습니다.",
+                          f" ({written}/{total}개 저장). 3시간 뒤 회차가 이어받습니다.",
                           file=sys.stderr)
                     outage = True
                     break
@@ -420,7 +438,7 @@ def main() -> int:
             if key in prev:
                 counts[key] = prev[key]
     _update_manifest(args.out, now, **counts)
-    print(f"forecast {written}/{len(mountains)}개 작성" + (" (dry-run)" if args.dry_run else ""))
+    print(f"forecast {written}/{total}개 작성" + (" (dry-run)" if args.dry_run else ""))
 
     if not outage:
         return 0
