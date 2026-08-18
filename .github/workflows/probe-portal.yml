@@ -1,14 +1,13 @@
 name: probe-portal
 
-# 진단 전용 — 러너에서 공공데이터포털까지 **연결이 되는지** 잰다.
-# 2026-08-18: 최근 100회차 중 43 failure / 20 cancelled 인데 오류가 전부
-# ConnectTimeoutError(=SYN 무응답)다. 서버가 죽으면 RST 나 5xx 가 오지 SYN 이 씹히지 않는다.
-# 한국 회선(KT)에서는 같은 순간 10ms 만에 붙는다 — 그래서 러너 쪽 경로를 직접 봐야 한다.
-# 확인이 끝나면 이 파일은 지운다.
+# 진단 전용. 두 가지를 잰다.
+#   ① 러너 IP 중 몇 %가 apis.data.go.kr 에 못 붙는가 (표본을 늘린다)
+#   ② **같은 워크플로 실행 안의 잡들이 서로 독립적인 IP 를 받는가**
+#      — 재시도 사슬이 통하려면 이게 참이어야 한다. 같은 풀에서 뽑히면 사슬은 헛것이다.
 
 on:
   push:
-    branches: [probe/portal]      # 브랜치 밀면 바로 돈다 (main 을 건드리지 않는다)
+    branches: [probe/portal]
   workflow_dispatch:
 
 permissions:
@@ -17,62 +16,22 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 6
+    strategy:
+      fail-fast: false
+      matrix:
+        n: [1, 2, 3, 4, 5, 6]      # 한 실행에서 러너 6대 = 표본 6개
     steps:
-      - name: 러너가 어디서 나가는가
+      - name: "표본 ${{ matrix.n }}"
         run: |
-          echo "== 나가는 IP / 위치 =="
-          curl -s --max-time 10 https://ipinfo.io/json || echo "(ipinfo 실패)"
-          echo
-          echo "== DNS =="
-          getent hosts apis.data.go.kr || echo "(getent 실패)"
-
-      - name: TCP 연결만 30회 (키 없이)
-        run: |
+          ip=$(curl -s --max-time 10 https://ipinfo.io/ip || echo "?")
+          org=$(curl -s --max-time 10 https://ipinfo.io/org || echo "?")
           ok=0; fail=0
-          for i in $(seq 1 30); do
-            t=$(curl -s -o /dev/null --max-time 10 \
-                 -w "%{http_code} %{time_connect} %{time_total}" \
-                 "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=dummy" 2>/dev/null) \
-              || t="000 - -"
-            code=${t%% *}
-            if [ "$code" = "000" ]; then fail=$((fail+1)); else ok=$((ok+1)); fi
-            echo "  $i: $t"
-            sleep 2
+          for i in $(seq 1 6); do
+            c=$(curl -s -o /dev/null --max-time 8 -w "%{http_code}" \
+                 "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=dummy" \
+                 2>/dev/null) || c="000"
+            [ "$c" = "000" ] && fail=$((fail+1)) || ok=$((ok+1))
           done
-          echo "== 연결 성공 $ok / 실패 $fail =="
-
-      - name: 실제 키로 5회 (응답 코드와 본문 앞부분만)
-        env:
-          KEY: ${{ secrets.DATA_GO_KR_KEY }}
-        run: |
-          if [ -z "$KEY" ]; then echo "키 없음 — 건너뜀"; exit 0; fi
-          for i in 1 2 3 4 5; do
-            code=$(curl -s -o /tmp/r.json --max-time 15 -w "%{http_code} conn=%{time_connect}s total=%{time_total}s" \
-              --get "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst" \
-              --data-urlencode "serviceKey=$KEY" \
-              -d "numOfRows=10&pageNo=1&base_date=$(date -u +%Y%m%d)&base_time=0500&nx=61&ny=79&dataType=JSON" \
-              2>/dev/null) || code="000 연결실패"
-            echo "  $i: $code"
-            # 본문 앞 200자만. 키는 쿼리에 있고 응답 본문에는 없다.
-            head -c 200 /tmp/r.json 2>/dev/null | tr -d '\n' | sed 's/^/     /'
-            echo
-            sleep 3
-          done
-
-      - name: 에어코리아도 같은 방식으로 5회
-        env:
-          KEY: ${{ secrets.DATA_GO_KR_KEY }}
-        run: |
-          if [ -z "$KEY" ]; then echo "키 없음 — 건너뜀"; exit 0; fi
-          for i in 1 2 3 4 5; do
-            code=$(curl -s -o /tmp/a.json --max-time 15 -w "%{http_code} conn=%{time_connect}s total=%{time_total}s" \
-              --get "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty" \
-              --data-urlencode "serviceKey=$KEY" \
-              -d "sidoName=서울&numOfRows=10&pageNo=1&ver=1.3&returnType=json" \
-              2>/dev/null) || code="000 연결실패"
-            echo "  $i: $code"
-            head -c 200 /tmp/a.json 2>/dev/null | tr -d '\n' | sed 's/^/     /'
-            echo
-            sleep 3
-          done
+          verdict=$([ "$ok" -gt 0 ] && echo 붙음 || echo 못붙음)
+          echo "RESULT|${{ matrix.n }}|$ip|$org|$ok/6|$verdict"
