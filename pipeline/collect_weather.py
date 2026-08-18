@@ -22,6 +22,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
+from _progress import track   # 진행률 로그
 
 KST = timezone(timedelta(hours=9))
 ROOT = Path(__file__).resolve().parent.parent
@@ -336,7 +337,7 @@ def main() -> int:
     miss_streak = 0
     outage = False
     deadline = time.monotonic() + DEADLINE_SEC
-    for mountain in mountains:
+    for mountain in track(mountains, '예보'):
         if not args.dry_run and time.monotonic() > deadline:
             print(f"  !! {DEADLINE_SEC // 60}분을 넘겨 여기서 멈춥니다"
                   f" ({written}/{len(mountains)}개 저장). 3시간 뒤 회차가 이어받습니다.",

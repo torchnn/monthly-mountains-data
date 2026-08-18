@@ -41,6 +41,7 @@ import requests
 from build_trail_index import find_for
 from geo import haversine_m
 from hangul import slug
+from _progress import track   # 진행률 로그
 
 ROOT = Path(__file__).resolve().parent.parent
 PIPE = ROOT / "pipeline"
@@ -672,7 +673,7 @@ def build(limit: int, want_photo: bool) -> dict:
 
     # id 중복 방지 — 동명이산이 둘 다 뽑히면 뒤엣것에 꼬리를 붙인다.
     seen: dict[str, int] = {}
-    for m in mountains:
+    for m in track(mountains, '산 정보'):
         if m["id"] in seen:
             seen[m["id"]] += 1
             m["id"] = f"{m['id']}{seen[m['id']]}"
