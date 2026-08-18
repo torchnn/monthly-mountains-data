@@ -5,3 +5,6 @@ __pycache__/
 
 # 원본 CSV 는 공공데이터포털에서 받는다 (2.4MB, fetch_visitor_stats.py 가 내려받음)
 data/raw/
+
+# run.sh 가 의존성 설치를 한 번만 하려고 남기는 표식
+.pipeline-deps-ok
