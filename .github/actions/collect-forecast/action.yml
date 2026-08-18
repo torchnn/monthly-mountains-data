@@ -1,0 +1,58 @@
+name: 예보 수집 1회 시도
+description: >
+  한 러너에서 예보를 받아 커밋한다. 러너가 받은 IP 가 포털에 못 붙으면
+  빨리 포기하고 실패로 끝낸다 — 부르는 쪽이 새 잡(=새 IP)으로 다시 시도한다.
+
+inputs:
+  data-key:
+    description: 공공데이터포털 인증키
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: pip
+
+    - run: pip install -r requirements.txt
+      shell: bash
+
+    - name: 날씨·대기질·특보 수집
+      id: collect
+      shell: bash
+      env:
+        DATA_GO_KR_KEY: ${{ inputs.data-key }}
+      # 종료코드 3 = 포털에 못 붙었다(이 러너 IP 로는 안 된다). 여기서 죽이지 않고
+      # 코드만 들고 나간다 — 받은 만큼은 커밋해야 하고, 재시도 판단은 부르는 쪽이 한다.
+      run: |
+        set +e
+        python pipeline/collect_weather.py
+        rc=$?
+        set -e
+        echo "rc=$rc" >> "$GITHUB_OUTPUT"
+        [ "$rc" = "0" ] || [ "$rc" = "3" ] || exit "$rc"
+
+    - name: 변경분 커밋
+      shell: bash
+      run: |
+        git config user.name  "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add data/v1/forecast data/v1/manifest.json
+        git diff --cached --quiet && echo "변경 없음" && exit 0
+        git commit -m "forecast: $(date -u +%Y-%m-%dT%H:%MZ)"
+        # 다른 잡이 먼저 밀었을 수 있다(재시도 사슬). 한 번 당겨서 다시 민다.
+        git push || { git pull --rebase --autostash && git push; }
+
+    - name: 못 붙었으면 이 잡을 실패로 — 다음 잡이 새 IP 로 받는다
+      if: steps.collect.outputs.rc == '3'
+      shell: bash
+      run: |
+        echo "이 러너 IP 로는 apis.data.go.kr 에 붙지 못했습니다."
+        echo "다음 잡이 다른 러너(=다른 IP)에서 다시 시도합니다."
+        exit 1
