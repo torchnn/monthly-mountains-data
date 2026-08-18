@@ -39,7 +39,21 @@ RETRIES = 3
 # 연속으로 이만큼 실패하면 그 산의 문제가 아니라 포털이 죽은 것이다.
 # 300번 확인해 볼 이유가 없으므로 그만두고, 그때까지 받은 것만 저장한다.
 # 12산 = 약 7분 — 일시적 흔들림과 진짜 장애를 가르기에 충분하고 상한 안에 들어온다.
+# (2026-08-18 실측으로 확인: 이 구간은 6분 24초였다. 문제는 이 앞이었다 — 아래 참고.)
 OUTAGE_STREAK = 12
+
+# 산 루프에 닿기 **전**에 도는 대기질·특보에도 같은 장치가 필요하다.
+# 이쪽은 시도 17곳을 각각 부르므로 포기 없이 두면 9분 19초를 태운다(실측).
+# 셋이 내리 실패하면 그 지역 문제가 아니라 포털이 죽은 것이다 — 약 1분 45초면 안다.
+PORTAL_DOWN_STREAK = 3
+
+# 예보가 이만큼 낡으면 그때 빨간불을 켠다.
+#
+# 한 회차를 놓치는 것 자체는 사고가 아니다 — 3시간 뒤 회차가 이어받고, 앱은 그동안
+# 직전 파일을 그대로 쓴다. 그런데도 회차마다 실패로 처리하면 포털이 한 번 흔들릴 때마다
+# 메일이 날아온다(하루 8통). 사람이 할 수 있는 일이 없는 알림은 곧 안 보게 된다.
+# 세 회차(9시간)를 내리 못 받으면 그건 일시적 흔들림이 아니라 봐야 할 일이다.
+STALE_AFTER_HOURS = 9
 
 # 연속 실패만으로는 부족하다. 성공과 실패가 섞이면 streak 이 계속 끊겨
 # 150산이 34초씩 실패해도 85분을 태운다. 그래서 벽시계로도 막는다.
@@ -206,10 +220,27 @@ def fetch_air_by_region() -> dict[str, dict]:
     regions = ["서울", "인천", "경기", "강원", "충북", "충남", "대전", "세종",
                "전북", "전남", "광주", "경북", "경남", "대구", "울산", "부산", "제주"]
     out = {}
+    # ⚠️ **여기에도 포기 장치가 필요하다.** 2026-08-18 01:54 회차에서 이 함수 하나가
+    # **9분 19초**를 태웠다 — 17개 시도를 각각 부르는데 포털이 죽어 전부 34초씩 실패했다.
+    # 그다음 특보 35초, 그리고 나서야 산 루프의 차단기가 6분 24초를 더 쓴다. 합쳐 17분 29초,
+    # 잡 상한 20분에 아슬아슬하게 붙었다. 산 루프만 막아 놓고 앞을 안 본 것이 실수였다.
+    #
+    # 게다가 여기서 이미 알 수 있다 — 시도 셋이 내리 실패하면 그건 그 지역 문제가 아니라
+    # 포털이 죽은 것이고, 남은 14개와 산 300개를 두드려 볼 이유가 없다.
+    dead_streak = 0
     for region in regions:
-        items = _items(get_json(AIRKOREA, {"sidoName": region, "numOfRows": 100,
-                                           "pageNo": 1, "ver": "1.3"},
-                                fmt_param="returnType"))
+        payload = get_json(AIRKOREA, {"sidoName": region, "numOfRows": 100,
+                                      "pageNo": 1, "ver": "1.3"},
+                           fmt_param="returnType")
+        if payload is None:
+            dead_streak += 1
+            if dead_streak >= PORTAL_DOWN_STREAK:
+                print(f"  !! 시도 {PORTAL_DOWN_STREAK}곳 연속 실패 — 포털이 죽었다고 보고"
+                      f" 대기질 수집을 그만둡니다({len(out)}/{len(regions)}곳).", file=sys.stderr)
+                break
+            continue
+        dead_streak = 0
+        items = _items(payload)
         pm10 = [int(v) for v in (i.get("pm10Value") for i in items) if _is_int(v)]
         pm25 = [int(v) for v in (i.get("pm25Value") for i in items) if _is_int(v)]
         if not pm10:
@@ -374,16 +405,44 @@ def main() -> int:
         )
         written += 1
 
-    _update_manifest(args.out, now, forecast_count=written)
+    # ⚠️ **한 건도 못 받은 회차가 매니페스트를 더 나쁘게 만들면 안 된다.**
+    # 2026-08-18 01:54 회차가 `forecast_count: 0` 을 배포본에 써 넣었다 — 예보 파일 300개는
+    # 그대로 있는데 숫자만 0 이라 그걸 보는 사람이 속는다. 읽는 코드가 없어 기능 영향은
+    # 없었지만, 배포본에 틀린 값을 올리는 것 자체가 버그다.
+    # 실제로 쓴 회차만 숫자와 시각을 갱신하고, 못 쓴 회차는 앞의 값을 그대로 둔다.
+    prev = _manifest(args.out)
+    counts: dict = {}
+    if written > 0:
+        counts["forecast_count"] = written
+        counts["forecastUpdatedAt"] = _iso(now)
+    else:
+        for key in ("forecast_count", "forecastUpdatedAt"):
+            if key in prev:
+                counts[key] = prev[key]
+    _update_manifest(args.out, now, **counts)
     print(f"forecast {written}/{len(mountains)}개 작성" + (" (dry-run)" if args.dry_run else ""))
 
-    # 받은 것은 저장하고 커밋까지 가되(부분 진척은 버리지 않는다),
-    # 장애였다는 사실은 빨간불로 남긴다. 조용히 초록으로 끝나면
-    # "왜 예보가 몇 시간째 안 바뀌지" 를 아무도 못 본다.
-    if outage:
-        print("포털 장애로 회차를 중단했습니다.", file=sys.stderr)
-        return 3
-    return 0
+    if not outage:
+        return 0
+
+    # 받은 것은 저장하고 커밋까지 간다(부분 진척은 버리지 않는다).
+    #
+    # **빨간불은 낡았을 때만 켠다.** 한 회차를 놓치는 것 자체는 사고가 아니다 —
+    # 3시간 뒤 회차가 이어받고 앱은 그동안 직전 파일을 쓴다. 그런데 회차마다 실패로
+    # 처리하면 포털이 한 번 흔들릴 때마다 메일이 온다(하루 8통). 사람이 할 수 있는 일이
+    # 없는 알림은 곧 안 보게 되고, 그러면 진짜 장애도 같이 묻힌다.
+    stale_h = _hours_since(prev.get("forecastUpdatedAt"))
+    if stale_h is None:
+        print("포털 장애로 회차를 중단했습니다. (마지막 성공 시각 기록이 아직 없어 이번은 넘어갑니다)",
+              file=sys.stderr)
+        return 0
+    if stale_h < STALE_AFTER_HOURS:
+        print(f"포털 장애로 회차를 중단했습니다. 마지막 성공이 {stale_h:.1f}시간 전이라"
+              f" 아직 {STALE_AFTER_HOURS}시간 안입니다 — 다음 회차가 이어받습니다.", file=sys.stderr)
+        return 0
+    print(f"포털 장애가 이어지고 있습니다. 마지막 성공이 {stale_h:.1f}시간 전 —"
+          f" {STALE_AFTER_HOURS}시간을 넘겼습니다.", file=sys.stderr)
+    return 3
 
 
 # 바다에만 내리는 특보 — 산에는 뜨면 안 된다. 한라산이 '제주도앞바다'에 걸리는 걸 막는다.
@@ -412,6 +471,27 @@ def _match_alerts(alerts: list[dict], mountain: dict) -> list[dict]:
         if key and (key in areas or (sigungu and sigungu.split()[-1] in areas)):
             hits.append({"type": alert["type"], "message": alert["areas"], "issuedAt": None})
     return hits
+
+
+def _manifest(root: Path) -> dict:
+    path = root / "manifest.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _hours_since(stamp: str | None) -> float | None:
+    """`_iso` 가 쓴 시각으로부터 몇 시간 지났는지. 못 읽으면 None."""
+    if not stamp:
+        return None
+    try:
+        then = datetime.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+    return (datetime.now(timezone.utc) - then).total_seconds() / 3600
 
 
 def _update_manifest(root: Path, now: datetime, **counts) -> None:
