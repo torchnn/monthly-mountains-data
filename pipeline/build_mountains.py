@@ -41,7 +41,14 @@ import requests
 from build_trail_index import find_for
 from geo import haversine_m
 from hangul import slug
-from _progress import track   # 진행률 로그
+# 진행률 로그. 스크립트로 직접 돌리면 `_progress` 가 바로 보이지만,
+# 테스트가 `from pipeline import ...` 처럼 패키지로 부르면 안 보인다. 둘 다 되게 한다.
+try:
+    from _progress import track
+except ImportError:  # pragma: no cover
+    import os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+    from _progress import track
 
 ROOT = Path(__file__).resolve().parent.parent
 PIPE = ROOT / "pipeline"
