@@ -41,6 +41,13 @@ _repo_lock_release() { [ "$_repo_lock_held" = 1 ] && rm -rf "$_repo_lock_dir"; r
 trap _repo_lock_release EXIT INT TERM
 
 repo_lock() {
+  # 러너(run.sh)가 이 레포를 이미 잠갔으면 그냥 통과한다. 안 그러면 자기 자신과 교착한다 —
+  # run.sh 가 잠금을 쥔 채 train-crowd.sh 를 부르고, 그 안에서 같은 잠금을 또 기다려서
+  # 300초 상한에 걸렸다("같은 레포를 'train-crowd' 가 쓰는 중 — 300초째 기다립니다").
+  # weekly-batch 처럼 **다른 레포**에서 부를 때는 값이 안 맞으므로 정상적으로 잠근다.
+  if [ "${PIPELINE_REPO_LOCKED:-}" = "$REPO" ]; then
+    return 0
+  fi
   local waited=0 limit=${REPO_LOCK_WAIT:-1800} owner who
   while ! mkdir "$_repo_lock_dir" 2>/dev/null; do
     owner=$(cat "$_repo_lock_dir/pid" 2>/dev/null)
