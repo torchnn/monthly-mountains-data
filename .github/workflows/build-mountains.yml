@@ -13,8 +13,13 @@ name: build-mountains
 # 앱에서 전부 같은 폴백 값(baseIndex 45)을 쓰게 되어 혼잡도 정렬이 무의미해진다.
 
 on:
-  schedule:
-    - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
+  # ⛔ 예약 실행을 껐다 (2026-08-21). 이 잡은 이제 **맥에서 launchd 로 돈다.**
+  #    시각의 단일 출처는 `~/claude/_pipelines/jobs.tsv`, 경위는 같은 곳 HANDOFF.md.
+  #    둘 다 켜 두면 같은 산출물을 하루 두 번 만든다(셋은 시각까지 같았다).
+  #    아래 `schedule:` 는 **되살릴 때 쓰라고 남긴다** — 왜 그 시각이었는지가 붙어 있다.
+  #    수동 실행은 그대로 산다: `gh workflow run build-mountains.yml`
+  # schedule:
+    # - cron: "0 18 1 * *"   # 매월 1일 03:00 KST
   workflow_dispatch:
     inputs:
       limit:
