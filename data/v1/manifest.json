@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-06T04:20:05Z",
+  "updatedAt": "2026-09-06T07:20:04Z",
   "mountains": 300,
   "crowdModel": {
     "factorExponent": 1.0,
     "profiles": 29
   },
   "note": "앱이 읽는 정적 데이터. 공공데이터 가공물과 파생 지수만 포함한다.",
-  "forecast_count": 300,
-  "forecastUpdatedAt": "2026-09-06T04:20:05Z"
+  "forecast_count": 37,
+  "forecastUpdatedAt": "2026-09-06T07:20:04Z"
 }
